@@ -1,0 +1,78 @@
+<fieldset class="cbi-section">
+	<table width="100%" cellspacing="10" id="_xlnetacc_gateway_status_table">
+		<tr><td width="20%" title="Refresh Network ..." id="_gateway_title"><font color=green></font></td><td title="GO TO Network ..." id="_gateway_state"><em></em></td></tr>
+	</table>
+	<table width="100%" cellspacing="10" id="_xlnetacc_wg_status_table">
+		<tr><td width="20%" title="Refresh Wireguard ..." id="_wg_title"></td><td id="_wg_state"><em></em></td></tr>
+	</table>
+	<table width="100%" cellspacing="10" id="_xlnetacc_vpn_status_table">
+		<tr><td width="20%" title="Start/Stop VPN" id="_vpn_title"></td><td title="Switch VPN ..." id="_vpn_state"><em></em></td></tr>
+	</table>
+	<table width="100%" cellspacing="10" id="_xlnetacc_ipsec_status_table">
+		<tr><td title="GO TO IPSEC" width="20%" id="_ipsec_title"></td><td title="GO TO IPSEC user..." id="_ipsec_state"><em></em></td></tr>
+	</table>
+	<table width="100%" cellspacing="10" id="_xlnetacc_pptp_status_table">
+		<tr><td title="GO TO PPTP" width="20%" id="_pptp_title"></td><td title="GO TO PPTP user..." id="_pptp_state"><em></em></td></tr>
+	</table>
+</fieldset>
+
+<script type="text/javascript">//<![CDATA[
+	var gateway_state = document.getElementById('_gateway_state');
+	var vpn_state = document.getElementById('_vpn_state');
+	var wg_state = document.getElementById('_wg_state');
+	var ipsec_state = document.getElementById('_ipsec_state');
+	var pptp_state = document.getElementById('_pptp_state');
+
+	var gateway_title = document.getElementById('_gateway_title');
+	var vpn_title = document.getElementById('_vpn_title');
+	var wg_title = document.getElementById('_wg_title');
+	var ipsec_title = document.getElementById('_ipsec_title');
+	var pptp_title = document.getElementById('_pptp_title');
+
+	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "gateway_status")%>', null, function(x, status) {
+		if ( x && x.status == 200 ) {
+			gateway_title.innerHTML ='<em><b><a href="sysmonitor/refresh"><font color=green>Gateway Address</font></a></b></em>';
+			gateway_state.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/network/network"><font color=green>'+status.gateway_state+'</font></a></b></em>';
+		}
+	});
+	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "vpn_status")%>', null, function(x, status) {
+		if ( x && x.status == 200 ) {
+			if ( status.vpn_state.search(/Running/) > 0 ) {
+			vpn_title.innerHTML ='<em><b><font color=green><a href="sysmonitor/onoff_vpn">Stop VPN</a></font></b></em>';
+			vpn_state.innerHTML ='<em><b><a href="sysmonitor/switch_vpn"><font color=green>'+status.vpn_state+'</font></a></b></em>';}
+			else if ( status.vpn_state.search(/Stopped/) > 0 ) {
+			vpn_title.innerHTML ='<em><b><font color=red><a href="sysmonitor/onoff_vpn">Start VPN</a></font></b></em>';
+			vpn_state.innerHTML ='<em><b><a href="sysmonitor/onoff_vpn"><font color=red>'+status.vpn_state+'</font></a></b></em>';}
+			else {
+			vpn_title.innerHTML ='<em><b></b></em>';
+			vpn_state.innerHTML ='<em><b></b></em>';}
+		}
+	});
+	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "wg_status")%>', null, function(x, status) {
+		if ( x && x.status == 200 ) {
+			wg_title.innerHTML ='<em><b><a href="sysmonitor/refreshwg"><font color=green>Wireguard Address</font></a></b></em>';
+			wg_state.innerHTML ='<em><b><font color=green>'+status.wg_state+'</font></b></em>';
+		}
+	});
+	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "ipsec_status")%>', null, function(x, status) {
+		if ( x && x.status == 200 ) {
+			if ( status.ipsec_state.search(/one/) > 0 ) { 
+			ipsec_title.innerHTML ='<em><b></b></em>';
+			ipsec_state.innerHTML ='<em><b></b></em>';}
+			else {
+			ipsec_title.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/vpn/ipsec-server"><font color=green>IPSEC Users</font></a></b></em>';
+			ipsec_state.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/vpn/ipsec-server/online"><font color=green>'+status.ipsec_state+'</font></a></b></em>';}
+		}
+	});
+	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "pptp_status")%>', null, function(x, status) {
+		if ( x && x.status == 200 ) {
+			if ( status.pptp_state.search(/one/) > 0 ) {
+			pptp_title.innerHTML ='<em><b></b></em>';
+			pptp_state.innerHTML ='<em><b></b></em>';}
+			else {
+			pptp_title.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/vpn/pptpd"><font color=green>PPTP Users</font></a></b></em>';
+			pptp_state.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/vpn/pptpd/online"><font color=green>'+status.pptp_state+'</font></a></b></em>';}
+		}
+	});
+//]]></script>
+

@@ -1,0 +1,26 @@
+#!/bin/sh
+uci -q batch <<-EOF >/dev/null
+delete ucitrack.@sysmonitor[-1]
+add ucitrack sysmonitor
+set ucitrack.@sysmonitor[-1].init=sysmonitor
+commit ucitrack
+EOF
+
+#sed -i '/smartdnsAD.sh/d' /etc/crontabs/root
+#echo '0 3 * * 0 /usr/share/sysmonitor/smartdnsAD.sh' >>/etc/crontabs/root
+
+cat > /etc/config/ttyd <<EOF
+config ttyd
+	option interface '@lan'
+	option command '/bin/login'
+
+config ttyd
+	option interface '@wan'
+	option command '/bin/login'
+EOF
+
+chmod 0600 /etc/dropbear/authorized_keys
+chmod 0755 /etc/init.d/sysmonitor /usr/share/sysmonitor/*.sh
+rm -rf /tmp/luci-modulecache /tmp/luci-indexcache
+
+exit 0

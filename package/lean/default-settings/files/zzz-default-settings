@@ -1,0 +1,265 @@
+#!/bin/sh
+
+uci set luci-app-pptp-server.pptpd.enabled=0
+uci commit luci-app-pptp-server
+uci set ipsec.ipsec.enabled=0
+uci commit ipsec
+#uci set zerotier.sample_config.enabled=0
+#uci commit zerotier
+
+uci set fstab.@global[0].anon_mount='1'
+uci commit fstab
+
+uci set upnpd.config.enabled='1'
+uci commit upnpd
+
+uci set system.@system[0].hostname='VAIOMI'
+uci set system.@system[0].timezone=CST-8
+uci set system.@system[0].zonename=Asia/Shanghai
+uci commit system
+
+#uci set dhcp.@dnsmasq[0].rebind_protection='0'
+uci del_list dhcp.lan.dhcp_option='44,192.168.1.8'
+uci add_list dhcp.lan.dhcp_option='44,192.168.1.8'
+uci del_list dhcp.lan.list ra_flags='none'
+uci add_list dhcp.lan.list ra_flags='none'
+uci set dhcp.lan.ra='relay'
+uci set dhcp.lan.dhcpv6='relay'
+uci set dhcp.lan.ndp='relay'
+uci commit dhcp
+
+cat /etc/config/dhcp | grep wan6 > /dev/null
+if [ $? -ne 0 ];then
+cat >> /etc/config/dhcp <<EOF
+config dhcp 'wan6'
+	option interface 'wan6'
+	option ignore '1'
+	option master '1'
+	option ra 'relay'
+	option dhcpv6 'relay'
+	option ndp 'relay'
+	list ra_flags 'none'
+EOF
+fi
+
+uci del_list network.@device[0].ports='lan1'
+uci set network.@device[0].stp='1'
+#uci set network.@device[0].MTU='1472'
+uci set network.globals.ula_prefix=''
+uci set network.wan.hostname="VAIOMI"
+uci set network.wan.proto='static'
+uci set network.wan.ipaddr='192.168.1.119'
+uci set network.wan.netmask='255.255.255.0'
+uci set network.wan.gateway='192.168.1.110'
+uci set network.wan.dns='192.168.1.110'
+uci set network.wan.force_link='0'
+uci set network.lan.ip6assign=''
+uci set network.lan.ipaddr='192.168.88.1'
+uci set network.lan.force_link='0'
+uci commit network
+
+uci set wireless.radio0.noscan='1'
+#uci set wireless.radio0.country="CN"
+uci set wireless.radio0.htmode='HT40'
+uci set wireless.radio0.channel='8'
+uci set wireless.radio0.legacy_rates='0'
+uci set wireless.radio0.mu_beamformer='1'
+uci set wireless.default_radio0.ssid='VAIOMI'
+uci set wireless.default_radio0.key='sonyvaiotz13w'
+uci set wireless.default_radio0.encryption='psk-mixed'
+#uci set wireless.default_radio0.disabled='1'
+
+#uci set wireless.radio1.country="CN"
+uci set wireless.radio1.hwmode='11a'
+uci set wireless.radio1.htmode='VHT80'
+uci set wireless.radio1.channel='44'
+#uci set wireless.radio1.txpower='23'
+uci set wireless.radio1.legacy_rates='0'
+uci set wireless.radio1.mu_beamformer='1'
+uci set wireless.default_radio1.ssid='VAIOMI'
+uci set wireless.default_radio1.key='sonyvaiotz13w'
+uci set wireless.default_radio1.encryption='psk-mixed'
+#uci set wireless.default_radio1.disabled='1'
+uci commit wireless
+
+uci set firewall.@defaults[0].flow_offloading='1'
+uci set firewall.@defaults[0].flow_offloading_hw='1'
+uci set firewall.@zone[1].input='ACCEPT'
+uci set firewall.@defaults[0].forward='ACCEPT'
+uci commit firewall
+
+sed -i '/192.168.1.8 NAS/d' /etc/hosts
+sed -i '/192.168.1.110 KMS/d' /etc/hosts
+echo '192.168.1.8 NAS' >> /etc/hosts
+echo '192.168.1.110 KMS' >> /etc/hosts
+
+cat /etc/config/firewall | grep NetBIOS-138 > /dev/null
+if [ $? -ne 0 ];then
+cat >> /etc/config/firewall <<EOF
+config redirect
+	option dest_port '137'
+	option name 'NetBIOS-137'
+	option src_dport '137'
+	option target 'DNAT'
+	option dest 'wan'
+	option src 'lan'
+	option dest_ip '192.168.1.8'
+config redirect
+	option dest_port '138'
+	option src 'lan'
+	option name 'NetBIOS-138'
+	option src_dport '138'
+	option target 'DNAT'
+	option dest_ip '192.168.1.8'
+	option dest 'wan'
+config redirect
+	option dest_port '139'
+	option name 'NetBIOS-139'
+	option src_dport '139'
+	option target 'DNAT'
+	option dest 'wan'
+	option src 'lan'
+	option dest_ip '192.168.1.8'
+config redirect
+	option dest_port '445'
+	option name 'NetBIOS-445'
+	option src_dport '445'
+	option target 'DNAT'
+	option dest 'wan'
+	option src 'lan'
+	option dest_ip '192.168.1.8'
+config rule
+	option src 'wan'
+	option target 'ACCEPT'
+	option name 'Allow-OMV'
+	list src_ip '192.168.1.8'
+	list proto 'all'
+config zone
+	option name 'wghome'
+	option input 'ACCEPT'
+	option forward 'ACCEPT'
+	option output 'ACCEPT'
+	option network 'wghome'
+config forwarding
+	option dest 'lan'
+	option src 'wghome'
+EOF
+fi
+
+file1='/etc/config/network'
+#sed -i "/option ports '1 2 3 6t'/a\\\toption vid '1'" $file1
+#sed -i s/"option ports '1 2 3 6t'"/"option ports '1 6t'"/ $file1
+#sed -i "/option ports '4 6t'/a\\\toption vid '2'" $file1
+#sed -i s/"option ports '4 6t'"/"option ports '2 3 4 6t'"/ $file1
+
+cat /etc/config/network | grep 192.168.9.119 > /dev/null
+if [ $? -ne 0 ];then
+cat >> /etc/config/network <<EOF
+config interface 'wghome'
+	option proto 'wireguard'
+	option private_key 'OITHHWLDFgCHKaYfRupo+TQhr4kxkJlcGjhNprpO6l4='
+	list addresses '192.168.9.119/24'
+	list addresses '192.168.8.119/24'
+	list addresses '192.168.7.119/24'
+	list addresses '192.168.6.119/24'
+config wireguard_wghome
+	option description 'ALiCloud'
+	option persistent_keepalive '25'
+	option endpoint_port '51820'
+	list allowed_ips '192.168.9.0/24'
+	option route_allowed_ips '1'
+	option endpoint_host '47.100.183.141'
+	option public_key 'GWLcAE1Of7H1iolrSRAK1FYGB5dhwbEMTZvEJxoZYGA='
+config wireguard_wghome
+	option public_key 'RuCdaOHKPDf2c2kihx2dzBhEDKZnbnhP1N4aUBkzw3A='
+	option route_allowed_ips '1'
+	list allowed_ips '192.168.8.0/24'
+config wireguard_wghome
+	option public_key 'HkRSRzDMks74AmFQlnByouVNR6E/o5I+j033QqF1UyI='
+	option route_allowed_ips '1'
+	list allowed_ips '192.168.7.0/24'
+config wireguard_wghome
+	option public_key 'ql9g9ngGQMq9cyBaun5QjnyROyh7Cu4zJ9eZwFM6UGw='
+	option route_allowed_ips '1'
+	list allowed_ips '192.168.6.0/24'
+EOF
+fi
+
+cat > /etc/config/ddns <<EOF
+config ddns 'global'
+	option ddns_dateformat '%F %R'
+	option ddns_loglines '250'
+	option ddns_rundir '/var/run/ddns'
+	option ddns_logdir '/var/log/ddns'
+
+config service 'ChangeipCom'
+	option service_name 'changeip.com'
+	option use_ipv6 '0'
+	option enabled '1'
+	option ip_source 'web'
+	option ip_url 'http://47.100.183.141/getip.php'
+	option bind_network 'wan'
+	option use_syslog '2'
+	option check_unit 'minutes'
+	option force_unit 'minutes'
+	option retry_unit 'seconds'
+	option lookup_host 'hello.changeip.com'
+	option domain 'hello.changeip.com'
+	option username 'sqmshcn@gmail.com'
+	option password 'sqmshcn110'
+	option interface 'eth0.2'
+	option force_dnstcp '1'
+
+config service 'DynuNet'
+	option service_name 'dynu.com'
+	option use_ipv6 '0'
+	option enabled '1'
+	option username 'sqmshcn@gmail.com'
+	option password 'sqmshcn110'
+	option use_syslog '2'
+	option check_unit 'minutes'
+	option force_unit 'minutes'
+	option retry_unit 'seconds'
+	option ip_source 'web'
+	option bind_network 'wan'
+	option lookup_host 'hellomain.ddnsfree.com'
+	option domain 'hellomain.ddnsfree.com'
+	option interface 'eth0.2'
+	option force_dnstcp '1'
+	option ip_url 'http://47.100.183.141/getip.php'
+	option use_https '1'
+	option cacert '/etc/ssl/certs'
+
+config service 'DynuNet6'
+	option service_name 'dynu.com'
+	option use_ipv6 '1'
+	option ip_source 'web'
+	option ip_url 'http://6.ipw.cn'
+	option interface 'eth0.2'
+	option bind_network 'wan'
+	option use_syslog '2'
+	option check_unit 'minutes'
+	option force_unit 'minutes'
+	option retry_unit 'seconds'
+	option lookup_host 'hellomain.ddnsfree.com'
+	option domain 'hellomain.ddnsfree.com'
+	option username 'sqmshcn@gmail.com'
+	option password 'sqmshcn110'
+	option enabled '1'
+	option force_dnstcp '1'
+	option use_https '1'
+	option cacert '/etc/ssl/certs'
+EOF
+
+sed -i '/dhcp-option/d' /etc/dnsmasq.conf
+echo "#dhcp-option-force=125,00:00:00:00:16:02:06:48:47:57:2d:43:54:03:04:5a:58:48:4e:0b:02:00:55:0a:02:20:00" >> /etc/dnsmasq.conf
+echo "#dhcp-option=15" >> /etc/dnsmasq.conf
+echo "#dhcp-option=28" >> /etc/dnsmasq.conf
+
+sed -i 's/root:::0:99999:7:::/root:$1$TADtMues$II9qrw8S7H3hYtJASm0tw.:19059:0:99999:7:::/g' /etc/shadow
+
+sed -i '/option disabled/d' /etc/config/wireless
+sed -i '/set wireless.radio${devidx}.disabled/d' /lib/wifi/mac80211.sh
+wifi up
+
+exit 0

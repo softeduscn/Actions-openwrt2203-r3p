@@ -1,0 +1,91 @@
+#!/bin/sh /etc/rc.common
+#
+# Copyright (C) 2017 openwrt-system-monitor
+#
+# This is free software, licensed under the GNU General Public License v3.
+# See /LICENSE for more information.
+#
+START=99
+STOP=15
+NAME=sysmonitor
+APP_PATH=/usr/share/$NAME
+
+stop()
+{
+	set sysmonitor.sysmonitor.enable=0
+	set commit sysmonitor
+}
+start()
+{
+	status=$(ps | grep dynamic_dns_updater | grep -v grep | grep -v check | wc -l)
+	if [ "$status" -lt 1 ]; then
+		[ -f /etc/init.d/ddns ] && /etc/init.d/ddns start           
+	fi
+	/usr/share/sysmonitor/sysapp.sh vlan
+	cat /etc/config/dhcp | grep 127.0.0.1#5053 > null
+	if [ $? -eq 0 ];then
+		sed -i "/list server '127.0.0.1#5053'/d" /etc/config/dhcp
+		sed -i "/list server '127.0.0.1#5054'/d" /etc/config/dhcp
+		uci set dhcp.@dnsmasq[0].noresolv=0
+		uci commit dhcp
+		/etc/init.d/dnsmasq reload 2>/dev/null &
+	fi
+	if [ $(uci get dhcp.lan.dhcpv6) == 'server' ];  then
+		uci set dhcp.lan.force='1'
+		uci set dhcp.lan.ra='relay'
+		uci set dhcp.lan.dhcpv6='relay'
+		uci set dhcp.lan.ndp='relay'
+		uci set dhcp.lan.ra_management=''
+		uci commit dhcp
+		/etc/init.d/odhcpd reload
+	fi
+	if [ $(uci get sysmonitor.sysmonitor.bbr) == 1 ];  then
+		sysctl -w net.ipv4.tcp_congestion_control=bbr
+	else
+		sysctl -w net.ipv4.tcp_congestion_control=cubic
+	fi
+	if [ $(uci get sysmonitor.sysmonitor.vpn) == 0 ];  then
+		# Stop Passwall
+		if [ -f "/etc/init.d/passwall" ]; then
+			if [ $(uci get passwall.@global[0].enabled) == 1 ]; then
+				uci set passwall.@global[0].enabled=0
+				uci commit passwall
+				/etc/init.d/passwall stop &
+			fi
+		fi
+		# Stop Shadowsocksr
+		if [ -f "/etc/init.d/shadowsocksr" ]; then
+			[ "$(ps -w |grep ssr- |grep -v grep |wc -l)" -gt 0 ] && /etc/init.d/shadowsocksr stop &
+		fi
+	else
+		if [ -f "/etc/init.d/passwall" ]; then
+			if [ $(uci get passwall.@global[0].tcp_node) != 'nil' ]; then
+				uci set passwall.@global[0].enabled=1
+				uci commit passwall
+				/etc/init.d/passwall restart &
+			fi			
+		elif [ -f "/etc/init.d/shadowsocksr" ]; then
+			if [ $(uci get passwall.@global[0].enabled) == 0 ]; then
+				/etc/init.d/shadowsocksr restart &
+			fi
+		else
+			uci set sysmonitor.sysmonitor.vpn=0
+			uci commit sysmonitor
+			touch /tmp/sysmonitor
+		fi
+	fi
+	if [ -f "/etc/init.d/smartdns" ]; then
+		if [ $(uci get sysmonitor.sysmonitor.smartdnsAD) == 1 ];  then
+			sed -i s/'#conf-file \/etc\/smartdns\/anti-ad-for-smartdns.conf'/'conf-file \/etc\/smartdns\/anti-ad-for-smartdns.conf'/ /etc/smartdns/custom.conf
+		else
+			sed -i s/'#conf-file'/'conf-file'/ /etc/smartdns/custom.conf
+			sed -i s/'conf-file \/etc\/smartdns\/anti-ad-for-smartdns.conf'/'#conf-file \/etc\/smartdns\/anti-ad-for-smartdns.conf'/ /etc/smartdns/custom.conf	
+		fi
+		/etc/init.d/smartdns restart &
+	fi
+	set sysmonitor.sysmonitor.enable=1
+	set commit sysmonitor
+	$APP_PATH/sysmonitor.sh &
+}
+
+

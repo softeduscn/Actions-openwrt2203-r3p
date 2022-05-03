@@ -1,0 +1,99 @@
+--- a/package/openwrt/custom.conf	2020-08-20 00:45:38.000000000 +0800
++++ b/package/openwrt/custom.conf	2022-04-04 11:29:17.822079168 +0800
+@@ -1,14 +1,81 @@
+-# Add custom settings here.
+-
+-# set log level
+-# log-level [level], level=fatal, error, warn, notice, info, debug
+-# log-level error
+-
+-# log-size k,m,g
+-# log-size 128k
+-
+-# log-file /var/log/smartdns.log
+-# log-num 2
+-
+-# List of hosts that supply bogus NX domain results 
+-# bogus-nxdomain [ip/subnet]
+\ No newline at end of file
++# Add custom settings here.
++
++# set log level
++# log-level [level], level=fatal, error, warn, notice, info, debug
++# log-level error
++
++# log-size k,m,g
++# log-size 128k
++
++# log-file /var/log/smartdns.log
++# log-num 2
++
++# List of hosts that supply bogus NX domain results 
++# bogus-nxdomain [ip/subnet]
++
++prefetch-domain yes
++#conf-file /etc/smartdns/anti-ad-for-smartdns.conf
++cache-size 65535
++rr-ttl-min 300
++rr-ttl-max 600
++bind: 6053 -group china
++bind-tcp: 6053 -group china
++bind: 7913 -group oversea
++bind-tcp: 7913 -group oversea
++
++speed-check-mode ping,tcp:80
++
++server 119.29.29.29 -group china
++server 114.114.114.114 -group china
++server 114.114.115.115 -group china
++server 223.5.5.5 -group china
++server 223.6.6.6 -group china
++server 180.76.76.76 -group china
++
++server-tcp 119.29.29.29 -group china
++server-tcp 114.114.114.114 -group china
++server-tcp 114.114.115.115 -group china
++server-tcp 223.5.5.5 -group china
++server-tcp 223.6.6.6 -group china
++server-tcp 180.76.76.76 -group china
++
++server-tcp 8.8.4.4 -group oversea -exclude-default-group
++server-tcp 8.8.8.8 -group oversea -exclude-default-group
++server-tcp 1.1.1.1 -group oversea -exclude-default-group
++server-tcp 1.0.0.1 -group oversea -exclude-default-group
++server-tcp 208.67.222.222 -group oversea -exclude-default-group
++server-tcp 208.67.220.220 -group oversea -exclude-default-group
++server-tcp 124.202.220.146 -group oversea -exclude-default-group
++server-tcp 202.96.69.38 -group oversea -exclude-default-group
++server-tcp 210.21.223.204 -group oversea -exclude-default-group
++server-tcp 113.204.69.42 -group oversea -exclude-default-group
++server-tcp 202.14.67.4 -group oversea -exclude-default-group
++server-tcp 210.68.97.1 -group oversea -exclude-default-group
++server-tcp 205.171.3.65 -group oversea -exclude-default-group
++server-tcp 203.2.193.67 -group oversea -exclude-default-group
++server-tcp 210.220.163.82 -group oversea -exclude-default-group
++server-tcp 142.103.1.1 -group oversea -exclude-default-group
++server-tcp 211.121.135.130 -group oversea -exclude-default-group
++server-tcp 91.214.72.33 -group oversea -exclude-default-group
++server-tcp 195.214.240.136 -group oversea -exclude-default-group
++server-tcp 212.66.160.2 -group oversea -exclude-default-group
++server-tcp 91.217.62.219 -group oversea -exclude-default-group
++server-tcp 213.188.101.15 -group oversea -exclude-default-group
++server-tcp 222.255.121.132 -group oversea -exclude-default-group
++server-tcp 202.136.162.11 -group oversea -exclude-default-group
++server-tcp 193.67.79.39 -group oversea -exclude-default-group
++server-tcp 200.5.32.1 -group oversea -exclude-default-group
++server-tcp 218.195.253.4 -group oversea -exclude-default-group
++server-tcp 219.144.217.102 -group oversea -exclude-default-group
++
++server-tls 8.8.4.4:853 -group oversea -exclude-default-group
++server-tls 8.8.8.8:853 -group oversea -exclude-default-group
++server-tls 1.1.1.1:853 -group oversea -exclude-default-group
++server-tls 1.0.0.1:853 -group oversea -exclude-default-group
++server-tls 208.67.222.222:853 -group oversea -exclude-default-group
++server-tls 208.67.220.220:853 -group oversea -exclude-default-group
++server-https https://8.8.8.8/dns-query -group oversea -exclude-default-group
++server-https https://8.8.4.4/dns-query -group oversea -exclude-default-group
++server-https https://1.1.1.1/dns-query -group oversea -exclude-default-group
++server-https https://1.0.0.1/dns-query -group oversea -exclude-default-group
++conf-file /tmp/etc/smartdns/passwall.conf

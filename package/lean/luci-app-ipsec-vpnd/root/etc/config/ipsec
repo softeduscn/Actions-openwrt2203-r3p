@@ -1,0 +1,23 @@
+
+config service 'ipsec'
+	option clientdns '192.168.8.1'
+	option secret 'ipsec'
+	option enabled '1'
+	option clientip '192.168.8.150/24'
+	option l2tpd '192.168.8.201'
+	option remoteip '192.168.8.210-220'
+	
+config users
+	option enabled '1'
+	option username 'myvpn'
+	option password 'myvpn'
+	
+config users
+	option enabled '1'
+	option username 'myvpn1'
+	option password 'myvpn1'
+
+config users
+	option enabled '1'
+	option username 'myvpn2'
+	option password 'myvpn2'
