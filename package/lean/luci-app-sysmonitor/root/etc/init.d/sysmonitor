@@ -22,7 +22,7 @@ start()
 		[ -f /etc/init.d/ddns ] && /etc/init.d/ddns start           
 	fi
 	/usr/share/sysmonitor/sysapp.sh vlan
-	cat /etc/config/dhcp | grep 127.0.0.1#5053 > null
+	cat /etc/config/dhcp | grep 127.0.0.1#5053 > /dev/null
 	if [ $? -eq 0 ];then
 		sed -i "/list server '127.0.0.1#5053'/d" /etc/config/dhcp
 		sed -i "/list server '127.0.0.1#5054'/d" /etc/config/dhcp

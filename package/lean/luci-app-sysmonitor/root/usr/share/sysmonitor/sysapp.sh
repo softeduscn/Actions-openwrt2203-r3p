@@ -222,7 +222,7 @@ upgrade() {
 }
 
 vlan() {
-cat /etc/config/network | grep vlan > null
+cat /etc/config/network | grep vlan > /dev/null
 if [ $? -ne 0 ];then
 cat >> /etc/config/network <<EOF
 config device
