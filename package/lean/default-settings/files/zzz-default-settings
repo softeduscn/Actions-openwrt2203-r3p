@@ -191,6 +191,7 @@ config ddns 'global'
 	option ddns_loglines '250'
 	option ddns_rundir '/var/run/ddns'
 	option ddns_logdir '/var/log/ddns'
+	option upd_privateip '1'
 
 config service 'ChangeipCom'
 	option service_name 'changeip.com'
