@@ -23,19 +23,17 @@ permissions:
   contents: write
   packages: write
   issues: write
-#  actions: write
-#  checks: write
-#  deployments: write
-#  id-token: write
-#  discussions: write
-#  pages: write
-#  pull-requests: write
-#  repository-projects: write
-#  security-events: write
-#  statuses: write
+  actions: write
+  checks: write
+  deployments: write
+  id-token: write
+  discussions: write
+  pages: write
+  pull-requests: write
+  repository-projects: write
+  security-events: write
+  statuses: write
 
-
-  
 env:
   REPO_URL: https://github.com/lede-project/source
   REPO_BRANCH: openwrt-22.03
