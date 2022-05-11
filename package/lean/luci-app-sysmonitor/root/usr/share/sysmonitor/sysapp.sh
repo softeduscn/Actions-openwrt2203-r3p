@@ -281,7 +281,7 @@ config device
 	option vid '2'
 EOF
 
-uci set network.lan.device='vlan.1'
+#uci set network.lan.device='vlan.1'
 uci set network.wan6.device='vlan.2'
 uci set network.wan.device='vlan.2'
 uci commit network
