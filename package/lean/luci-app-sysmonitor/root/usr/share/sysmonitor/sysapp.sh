@@ -145,6 +145,7 @@ switch_vpn() {
 	if [ $(uci get sysmonitor.sysmonitor.vpn) == 0 ];  then
 		onoff_vpn
 	else
+		ifup lan
 		if [ "$(ps -w|grep passwall|grep -v grep|wc -l)" == 0 ]; then
 			if [ -f "/etc/init.d/passwall" ]; then
 				uci set passwall.@global[0].enabled=1
@@ -285,7 +286,10 @@ EOF
 uci set network.wan6.device='vlan.2'
 uci set network.wan.device='vlan.2'
 uci commit network
-/etc/init.d/network reload 2>/dev/null
+#/etc/init.d/network reload 2>/dev/null
+ifup wan
+ifup wan6
+ifup lan
 wifi up
 fi
 }
