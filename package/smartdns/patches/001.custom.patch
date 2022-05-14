@@ -1,34 +1,11 @@
 --- a/package/openwrt/custom.conf	2020-08-20 00:45:38.000000000 +0800
-+++ b/package/openwrt/custom.conf	2022-04-04 11:29:17.822079168 +0800
-@@ -1,14 +1,81 @@
--# Add custom settings here.
--
--# set log level
--# log-level [level], level=fatal, error, warn, notice, info, debug
--# log-level error
--
--# log-size k,m,g
--# log-size 128k
--
--# log-file /var/log/smartdns.log
--# log-num 2
--
--# List of hosts that supply bogus NX domain results 
++++ b/package/openwrt/custom.conf	2022-05-14 10:53:52.533161835 +0800
+@@ -11,4 +11,75 @@
+ # log-num 2
+ 
+ # List of hosts that supply bogus NX domain results 
 -# bogus-nxdomain [ip/subnet]
 \ No newline at end of file
-+# Add custom settings here.
-+
-+# set log level
-+# log-level [level], level=fatal, error, warn, notice, info, debug
-+# log-level error
-+
-+# log-size k,m,g
-+# log-size 128k
-+
-+# log-file /var/log/smartdns.log
-+# log-num 2
-+
-+# List of hosts that supply bogus NX domain results 
 +# bogus-nxdomain [ip/subnet]
 +
 +prefetch-domain yes
@@ -38,8 +15,8 @@
 +rr-ttl-max 600
 +bind: 6053 -group china
 +bind-tcp: 6053 -group china
-+bind: 7913 -group oversea
-+bind-tcp: 7913 -group oversea
++bind: 15353 -group oversea
++bind-tcp: 15353 -group oversea
 +
 +speed-check-mode ping,tcp:80
 +
@@ -56,6 +33,9 @@
 +server-tcp 223.5.5.5 -group china
 +server-tcp 223.6.6.6 -group china
 +server-tcp 180.76.76.76 -group china
++
++server-https  https://dns.pub/dns-query -group china
++server-https  https://dns.alidns.com/dns-query -group china
 +
 +server-tcp 8.8.4.4 -group oversea -exclude-default-group
 +server-tcp 8.8.8.8 -group oversea -exclude-default-group
@@ -92,8 +72,9 @@
 +server-tls 1.0.0.1:853 -group oversea -exclude-default-group
 +server-tls 208.67.222.222:853 -group oversea -exclude-default-group
 +server-tls 208.67.220.220:853 -group oversea -exclude-default-group
-+server-https https://8.8.8.8/dns-query -group oversea -exclude-default-group
-+server-https https://8.8.4.4/dns-query -group oversea -exclude-default-group
-+server-https https://1.1.1.1/dns-query -group oversea -exclude-default-group
-+server-https https://1.0.0.1/dns-query -group oversea -exclude-default-group
-+conf-file /tmp/etc/smartdns/passwall.conf
++
++server-https https://dns.google/dns-query -group oversea -exclude-default-group
++server-https https://cloudflare-dns.com/dns-query -group oversea -exclude-default-group
++server-https https://doh.opendns.com/dns-query -group oversea -exclude-default-group
++server-https https://dns.quad9.net/dns-query -group oversea -exclude-default-group
++
