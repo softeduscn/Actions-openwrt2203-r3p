@@ -1,9 +1,9 @@
 #!/bin/sh
 
-uci set luci-app-pptp-server.pptpd.enabled=0
-uci commit luci-app-pptp-server
-uci set ipsec.ipsec.enabled=0
-uci commit ipsec
+#uci set luci-app-pptp-server.pptpd.enabled=0
+#uci commit luci-app-pptp-server
+#uci set ipsec.ipsec.enabled=0
+#uci commit ipsec
 #uci set zerotier.sample_config.enabled=0
 #uci commit zerotier
 
