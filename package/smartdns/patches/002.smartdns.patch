@@ -1,5 +1,5 @@
 --- a/package/openwrt/files/etc/config/smartdns	2020-08-20 00:44:00.000000000 +0800
-+++ b/package/openwrt/files/etc/config/smartdns	2022-05-14 10:53:52.521154437 +0800
++++ b/package/openwrt/files/etc/config/smartdns	2022-05-18 07:53:47.230220548 +0800
 @@ -1,3 +1,26 @@
 -config 'smartdns'
 -	option 'enabled' '0'

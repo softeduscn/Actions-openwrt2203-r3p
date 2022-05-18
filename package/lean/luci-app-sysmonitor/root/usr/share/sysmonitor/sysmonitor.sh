@@ -30,6 +30,7 @@ ping_url() {
 
 
 while [ "1" == "1" ]; do #死循环
+
 	homeip=$(uci_get_by_name $NAME sysmonitor homeip 0)
 	vpnip=$(uci_get_by_name $NAME sysmonitor vpnip 0)
 	dnsadd=$(uci_get_by_name network wan dns 0)
@@ -72,8 +73,11 @@ while [ "1" == "1" ]; do #死循环
 			fi
 		fi
 	fi
+
+	/usr/share/sysmonitor/sysapp.sh getip >/www/localip.html
+	/usr/share/sysmonitor/sysapp.sh getip6 >/www/localip6.html
 	[ $(uci_get_by_name $NAME sysmonitor enable 0) == 0 ] && exit 0
-	
+
 	num=0
 	while [ $num -le 30 ]; do
 		sleep $sleep_unit

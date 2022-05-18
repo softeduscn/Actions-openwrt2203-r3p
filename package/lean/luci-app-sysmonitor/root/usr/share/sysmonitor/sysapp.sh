@@ -294,10 +294,24 @@ wifi up
 fi
 }
 
+getip() {
+	echo $(ip -o -4 addr list vlan.2 | cut -d ' ' -f7 | cut -d'/' -f1)
+}
+
+getip6() {
+	echo $(ip -o -6 addr list vlan.2 | cut -d ' ' -f7 | cut -d'/' -f1 |head -n1)
+}
+
 arg1=$1
 shift
 case $arg1 in
 
+getip)
+	getip
+	;;
+getip6)
+	getip6
+	;;
 agh)
 	agh
 	;;

@@ -1,5 +1,5 @@
 --- a/package/openwrt/custom.conf	2020-08-20 00:45:38.000000000 +0800
-+++ b/package/openwrt/custom.conf	2022-05-14 10:53:52.533161835 +0800
++++ b/package/openwrt/custom.conf	2022-05-18 07:53:47.238221163 +0800
 @@ -11,4 +11,75 @@
  # log-num 2
  
