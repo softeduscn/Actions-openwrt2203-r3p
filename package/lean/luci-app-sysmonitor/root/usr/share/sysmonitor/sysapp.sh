@@ -80,7 +80,7 @@ ipsec_users() {
 			fi
 		done
 		users=$(/usr/sbin/ipsec status|grep Associations|cut -d' ' -f3|sed 's/^.//g')
-		[ "$users" == "" ] && users='None'
+		[ "$users" == 0 ] && users='None'
 	else
 		users='None'
 	fi
