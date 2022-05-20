@@ -394,7 +394,7 @@ conn xauth_psk
   	esp=aes128-sha1,3des-sha1
 	left=%defaultroute
 	leftauth=psk
-	leftsubnet=0.0.0.0/0
+	leftsubnet=0.0.0.0/0,::/0
 	right=%any
 	rightauth=psk
 	rightauth2=xauth

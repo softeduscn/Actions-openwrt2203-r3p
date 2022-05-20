@@ -104,6 +104,7 @@ config redirect
 	option dest 'wan'
 	option src 'lan'
 	option dest_ip '192.168.1.8'
+
 config redirect
 	option dest_port '138'
 	option src 'lan'
@@ -112,6 +113,7 @@ config redirect
 	option target 'DNAT'
 	option dest_ip '192.168.1.8'
 	option dest 'wan'
+
 config redirect
 	option dest_port '139'
 	option name 'NetBIOS-139'
@@ -120,6 +122,7 @@ config redirect
 	option dest 'wan'
 	option src 'lan'
 	option dest_ip '192.168.1.8'
+
 config redirect
 	option dest_port '445'
 	option name 'NetBIOS-445'
@@ -128,18 +131,43 @@ config redirect
 	option dest 'wan'
 	option src 'lan'
 	option dest_ip '192.168.1.8'
+
+config rule
+	option name 'l2tp'
+	list proto 'udp'
+	option src 'wan'
+	option target 'ACCEPT'
+	option dest_port '1701'
+
+config rule
+	list proto 'udp'
+	option target 'ACCEPT'
+	option src 'wan'
+	option dest_port '1701'
+	option dest 'lan'
+	option name 'Allow-l2tp'
+
 config rule
 	option src 'wan'
 	option target 'ACCEPT'
 	option name 'Allow-OMV'
 	list src_ip '192.168.1.8'
 	list proto 'all'
+	option dest '*'
+
+config rule
+	option name 'OMV'
+	option src 'wan'
+	list src_ip '192.168.1.8'
+	option target 'ACCEPT'
+
 config zone
 	option name 'wghome'
 	option input 'ACCEPT'
 	option forward 'ACCEPT'
 	option output 'ACCEPT'
 	option network 'wghome'
+
 config forwarding
 	option dest 'lan'
 	option src 'wghome'
