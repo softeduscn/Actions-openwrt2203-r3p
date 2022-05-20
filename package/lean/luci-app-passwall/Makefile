@@ -88,7 +88,7 @@ config PACKAGE_$(PKG_NAME)_INCLUDE_Haproxy
 
 config PACKAGE_$(PKG_NAME)_INCLUDE_Hysteria
 	bool "Include Hysteria"
-	default y
+	default n
 
 config PACKAGE_$(PKG_NAME)_INCLUDE_IPv6_Nat
 	depends on PACKAGE_ip6tables

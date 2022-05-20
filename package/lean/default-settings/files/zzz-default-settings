@@ -140,14 +140,6 @@ config rule
 	option dest_port '1701'
 
 config rule
-	list proto 'udp'
-	option target 'ACCEPT'
-	option src 'wan'
-	option dest_port '1701'
-	option dest 'lan'
-	option name 'Allow-l2tp'
-
-config rule
 	option src 'wan'
 	option target 'ACCEPT'
 	option name 'Allow-OMV'
