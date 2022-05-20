@@ -89,7 +89,7 @@ ipsec_users() {
 
 pptp_users() {
 	if [ -f "/usr/sbin/pppd" ]; then
-		users=$(top -bn1|grep pppd|grep -v grep|wc -l)
+		users=$(top -bn1|grep options.pptpd|grep -v grep|wc -l)
 #		let users=users-1
 		[ "$users" == 0 ] && users='None'
 	else
