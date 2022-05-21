@@ -146,13 +146,6 @@ config rule
 	list src_ip '192.168.1.8'
 	option target 'ACCEPT'
 
-config rule
-	option name 'l2tp'
-	list proto 'udp'
-	option src 'wan'
-	option target 'ACCEPT'
-	option dest_port '1701'
-
 config zone
 	option name 'wghome'
 	option input 'ACCEPT'

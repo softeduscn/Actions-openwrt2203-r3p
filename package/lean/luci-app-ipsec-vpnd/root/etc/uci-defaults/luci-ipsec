@@ -26,6 +26,14 @@ uci -q batch <<-EOF >/dev/null
   set firewall.@rule[-1].src="wan"
   set firewall.@rule[-1].proto="udp"
   set firewall.@rule[-1].dest_port="4500"
+  delete firewall.l2tp
+  add firewall rule
+  rename firewall.@rule[-1]="l2tp"
+  set firewall.@rule[-1].name="l2tp"
+  set firewall.@rule[-1].target="ACCEPT"
+  set firewall.@rule[-1].src="wan"
+  set firewall.@rule[-1].proto="udp"
+  set firewall.@rule[-1].dest_port="1701"
   delete firewall.ah
   add firewall rule
   rename firewall.@rule[-1]="ah"
