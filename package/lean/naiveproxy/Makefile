@@ -5,31 +5,22 @@
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=naiveproxy
-PKG_VERSION:=96.0.4664.45-1
-PKG_RELEASE:=3
+PKG_VERSION:=101.0.4951.41-1
+PKG_RELEASE:=1
 
 PKG_SOURCE:=$(PKG_NAME)-$(PKG_VERSION).tar.gz
 PKG_SOURCE_URL:=https://codeload.github.com/klzgrad/naiveproxy/tar.gz/v$(PKG_VERSION)?
-PKG_HASH:=b7ec325ac48d85063137a9efa3cbee7184052d7f4b4c469d88f4e5223235ca1f
+PKG_HASH:=890720b00ed81eacb11388b5c1a1d00c98182db6b57e87ba0053a5300aacfd5c
 
 PKG_LICENSE:=BSD 3-Clause
 PKG_LICENSE_FILES:=LICENSE
 PKG_MAINTAINER:=Tianling Shen <cnsztl@immortalwrt.org>
 
-PKG_BUILD_DEPENDS:=python3/host
 ifneq ($(wildcard $(TOPDIR)/feeds/packages/devel/ninja/ninja.mk),)
 PKG_BUILD_DEPENDS+= ninja/host
 endif
 PKG_USE_MIPS16:=0
 PKG_BUILD_PARALLEL:=1
-
-ifeq ($(NINJA),)
-NINJA = \
-	MAKEFLAGS="$(MAKE_JOBSERVER)" \
-		$(STAGING_DIR_HOSTPKG)/bin/ninja \
-		$(if $(findstring c,$(OPENWRT_VERBOSE)),-v) \
-		$(if $(MAKE_JOBSERVER),,-j1)
-endif
 
 ifneq ($(CONFIG_CPU_TYPE)," ")
   CPU_TYPE:=$(word 1, $(subst +," ,$(CONFIG_CPU_TYPE)))
@@ -66,38 +57,31 @@ ifneq ($(CONFIG_CCACHE),)
   export naive_ccache_flags=cc_wrapper="$(CCACHE)"
 endif
 
-CLANG_VER:=14-init-5759-g02895eed-1
+CLANG_VER:=15-init-3677-g8133778d-4
 CLANG_FILE:=clang-llvmorg-$(CLANG_VER).tgz
 define Download/CLANG
-	URL:=https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64 \
-	     https://sources.immortalwrt.org \
-	     https://sources.cdn.immortalwrt.org
+	URL:=https://commondatastorage.googleapis.com/chromium-browser-clang/Linux_x64
 	URL_FILE:=$(CLANG_FILE)
 	FILE:=$(CLANG_FILE)
-	HASH:=5c2d11236c7254d48b02535ff58897830bc64e7258434d658c7d606e8d01b179
+	HASH:=26d8c347253528e6dca471fa040d0e5e0f8eb55e6ec9671a673b88c723330a21
 endef
 
-GN_VER:=0153d369bbccc908f4da4993b1ba82728055926a
+GN_VER:=53ef169800760fdc09f0773bf380fe99eaeab339
 GN_FILE:=gn-git_revision-$(GN_VER).zip
 define Download/GN_TOOL
-	URL:=https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+ \
-	     https://sources.immortalwrt.org \
-	     https://sources.cdn.immortalwrt.org
+	URL:=https://chrome-infra-packages.appspot.com/dl/gn/gn/linux-amd64/+
 	URL_FILE:=git_revision:$(GN_VER)
 	FILE:=$(GN_FILE)
-	HASH:=8022d1e0d6627a740847806c27a195fa9fc15c4883359a6d162944c3d5e26b44
+	HASH:=beb261220f4195109297b1658212d041ffebef5a88b3194219659cf197840f77
 endef
 
-PGO_VER:=4664-1636557077-6e390f4e505916531ca2ab0c895d5903ab4d88a9
+PGO_VER:=4951-1650389737-545882ae3e5c9e7f75e0781c8dc0d1eafb667efd
 PGO_FILE:=chrome-linux-$(PGO_VER).profdata
 define Download/PGO_PROF
-	URL:=https://storage.googleapis.com.cnpmjs.org/chromium-optimization-profiles/pgo_profiles \
-	     https://storage.googleapis.com/chromium-optimization-profiles/pgo_profiles \
-	     https://sources.immortalwrt.org \
-	     https://sources.cdn.immortalwrt.org
+	URL:=https://storage.googleapis.com/chromium-optimization-profiles/pgo_profiles
 	URL_FILE:=$(PGO_FILE)
 	FILE:=$(PGO_FILE)
-	HASH:=8dcf5973033d40c9a7b15e571dea3832e7b67976aad9113369e22d43808c603f
+	HASH:=5b1490bb6176f0f70d19029701a2a2f8e26c9df01781db41b946659e3972892b
 endef
 
 define Build/Prepare
@@ -121,7 +105,7 @@ define Build/Compile
 		export naive_flags+=" $$$${naive_ccache_flags}" ; \
 		mkdir -p "out" ; \
 		./gn/out/gn gen "out/Release" --args="$$$${naive_flags}" --script-executable="$(PYTHON)" ; \
-		$(NINJA) -C "$(PKG_BUILD_DIR)/src/out/Release" naive ; \
+		ninja -C "out/Release" naive ; \
 	)
 endef
 

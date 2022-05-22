@@ -12,7 +12,7 @@ function index()
 	entry({"admin", "sys", "sysmonitor","settings"}, cbi("sysmonitor/setup"), _("General Settings"), 30).dependent = true
 	entry({"admin", "sys", "sysmonitor", "update"}, form("sysmonitor/filetransfer"),_("Update"), 40).leaf = true
 	entry({"admin", "sys", "sysmonitor", "wgusers"},cbi("sysmonitor/wgusers"),_("WGusers"), 50).leaf = true
-	entry({"admin", "sys", "sysmonitor", "log"},cbi("sysmonitor/log"),_("Log"), 50).leaf = true
+	entry({"admin", "sys", "sysmonitor", "log"},cbi("sysmonitor/log"),_("Log"), 60).leaf = true
 
 	entry({"admin", "sys", "sysmonitor", "gateway_status"}, call("action_gateway_status")).leaf = true
 	entry({"admin", "sys", "sysmonitor", "vpn_status"}, call("action_vpn_status")).leaf = true
