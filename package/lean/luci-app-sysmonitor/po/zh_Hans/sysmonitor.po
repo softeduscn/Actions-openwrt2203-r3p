@@ -73,6 +73,9 @@ msgstr "将文件上传到'/tmp/upload/'"
 msgid "System Settings"
 msgstr "系统配置"
 
+msgid "WGusers"
+msgstr "用户"
+
 msgid "WireGuard Enable"
 msgstr "WireGuard 启用"
 

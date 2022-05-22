@@ -67,19 +67,9 @@ ssr() {
 
 ipsec_users() {
 	if [ -f "/usr/sbin/ipsec" ]; then
-		ipsec_addr=$(ipsec leases|grep online|cut -d',' -f 3|cut -d' ' -f 5,11|sed "s/'//g")
-		/usr/sbin/ipsec status > /tmp/ipsec_users
-		tmp=$(cat /tmp/ipsec_users|cut -d':' -f 2|sed '/INSTALLED/d')
-		echo $tmp|sed 's/ESTABLISHED/\nONLINE/g' > /tmp/ipsec_users
-		echo '' > /tmp/log/ipsec_users
-		for x in $ipsec_addr; do
-			if [ $(echo $x|grep -E "^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$"|wc -l) -gt 0 ]; then
-				tmp=$x', '$(cat /tmp/ipsec_users|grep $x)
-			else
-				echo $x, $tmp >> /tmp/log/ipsec_users
-			fi
-		done
-		users=$(/usr/sbin/ipsec status|grep Associations|cut -d' ' -f3|sed 's/^.//g')
+		users=$(/usr/sbin/ipsec status|grep xauth|grep ESTABLISHED|wc -l)
+		usersl2tp=$(top -bn1|grep options.xl2tpd|grep -v grep|wc -l)
+		let "users=users+usersl2tp"
 		[ "$users" == 0 ] && users='None'
 	else
 		users='None'
@@ -96,6 +86,48 @@ pptp_users() {
 		users='None'
 	fi
 	echo $users
+}
+
+wg_users() {
+file='/var/log/wg_users'
+/usr/bin/wg >$file
+m=$(sed -n '/peer/=' $file | sort -r -n )
+k=$(cat $file|wc -l)
+let "k=k+1"
+s=$k
+for n in $m
+do 
+	let "k=s-n"
+	if [ $k -le 3 ] ;then 
+		let "s=s-1"
+		tmp='sed -i '$n,$s'd '$file
+		$tmp
+	else
+		let "i=n+3"
+		tmp='sed -n '$i'p '$file
+		tmp=$($tmp|cut -d' ' -f6)
+		case $tmp in
+		hour,)
+			let "s=s-1"
+			tmp='sed -i '$n,$s'd '$file
+			$tmp
+			;;
+		minutes,)
+			tmp='sed -n '$i'p '$file
+			tmp=$($tmp|cut -d' ' -f5)
+			if [ $tmp -ge 3 ] ;then
+				let "s=s-1"
+				tmp='sed -i '$n,$s'd '$file
+				$tmp
+			fi
+			;;
+		esac
+	fi
+	s=$n
+done
+users=$(cat $file|grep peer|wc -l)
+[ "$users" == 0 ] && users='None'
+echo $users
 }
 
 wg() {
@@ -325,7 +357,7 @@ pptp)
 	pptp_users
 	;;
 wg)
-	wg
+	wg_users
 	;;
 vlan)
 	vlan
