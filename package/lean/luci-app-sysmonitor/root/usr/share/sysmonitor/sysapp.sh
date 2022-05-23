@@ -107,7 +107,7 @@ do
 		tmp='sed -n '$i'p '$file
 		tmp=$($tmp|cut -d' ' -f6)
 		case $tmp in
-		hour,)
+		hours,)
 			let "s=s-1"
 			tmp='sed -i '$n,$s'd '$file
 			$tmp
