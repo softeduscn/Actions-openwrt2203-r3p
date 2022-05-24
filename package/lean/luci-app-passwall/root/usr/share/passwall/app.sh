@@ -1407,6 +1407,9 @@ stop() {
 	rm -rf /tmp/lock/${CONFIG}_script.lock
 	echolog "清空并关闭相关程序和缓存完成。"
 	/etc/init.d/sysctl restart
+	uci set smartdns.@smartdns[0].redirect="none"
+	uci commit smartdns
+	/etc/init.d/smartdns reload
 	exit 0
 }
 

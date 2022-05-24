@@ -893,6 +893,9 @@ boot() {
 }
 
 stop() {
+	uci set smartdns.@smartdns[0].redirect="none"
+	uci commit smartdns
+	/etc/init.d/smartdns reload
 	unlock
 	set_lock
 	/usr/bin/ssr-rules -f
