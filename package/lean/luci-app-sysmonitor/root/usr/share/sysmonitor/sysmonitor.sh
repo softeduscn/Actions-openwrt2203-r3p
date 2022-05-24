@@ -46,8 +46,6 @@ while [ "1" == "1" ]; do #死循环
 			uci set network.wan.dns=$homeip
 			uci commit network
 			ifup wan
-			ifup wan6
-			ifup lan
 		fi
 	else
 		status=$(ping_url $vpnip)
@@ -58,8 +56,6 @@ while [ "1" == "1" ]; do #死循环
 				uci set network.wan.dns=$homeip
 				uci commit network
 				ifup wan
-				ifup wan6
-				ifup lan
 			fi
 		else
 			vpnok=1
@@ -68,8 +64,6 @@ while [ "1" == "1" ]; do #死循环
 				uci set network.wan.dns=$vpnip
 				uci commit network
 				ifup wan
-				ifup wan6
-				ifup lan
 			fi
 		fi
 	fi
