@@ -1,6 +1,6 @@
 --- a/package/openwrt/files/etc/config/smartdns	2020-08-20 00:44:00.000000000 +0800
-+++ b/package/openwrt/files/etc/config/smartdns	2022-05-18 07:53:47.230220548 +0800
-@@ -1,3 +1,26 @@
++++ b/package/openwrt/files/etc/config/smartdns	2022-05-24 10:14:47.379283541 +0800
+@@ -1,3 +1,27 @@
 -config 'smartdns'
 -	option 'enabled' '0'
 -	
@@ -12,7 +12,7 @@
 +	option tcp_server '1'
 +	option prefetch_domain '1'
 +	option serve_expired '1'
-+	option redirect 'dnsmasq-upstream'
++	option redirect 'none'
 +	option ipv6_server '1'
 +	option port '6053'
 +	option rr_ttl_min '300'
@@ -24,10 +24,11 @@
 +	option seconddns_server_group 'oversea'
 +	option seconddns_no_cache '0'
 +	option seconddns_tcp_server '1'
-+	option seconddns_port '8653'
 +	option seconddns_no_rule_ipset '1'
 +	option seconddns_no_speed_check '0'
 +	option seconddns_no_rule_addr '1'
 +	option seconddns_no_rule_nameserver '1'
 +	option seconddns_no_dualstack_selection '0'
 +	option seconddns_no_rule_soa '1'
++	option seconddns_port '15353'
++
