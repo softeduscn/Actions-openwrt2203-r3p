@@ -28,7 +28,7 @@ start()
 		sed -i "/list server '127.0.0.1#5054'/d" /etc/config/dhcp
 		uci set dhcp.@dnsmasq[0].noresolv=0
 		uci commit dhcp
-		/etc/init.d/dnsmasq reload 2>/dev/null &
+		/etc/init.d/dnsmasq reload >/dev/null
 	fi
 	if [ $(uci get dhcp.lan.dhcpv6) == 'server' ];  then
 		uci set dhcp.lan.force='1'
@@ -37,12 +37,30 @@ start()
 		uci set dhcp.lan.ndp='relay'
 		uci set dhcp.lan.ra_management=''
 		uci commit dhcp
-		/etc/init.d/odhcpd reload
+		/etc/init.d/dnsmasq reload >/dev/null
 	fi
 	if [ $(uci get sysmonitor.sysmonitor.bbr) == 1 ];  then
 		sysctl -w net.ipv4.tcp_congestion_control=bbr
 	else
 		sysctl -w net.ipv4.tcp_congestion_control=cubic
+	fi
+	if [ $(uci get sysmonitor.sysmonitor.ipsec) == 1 ];  then
+		uci set ipsec.ipsec.enabled='1'
+		uci commit ipsec
+		[ $(ps -w |grep ipsec/starter|grep -v grep|wc -l) -eq 0 ] && /etc/init.d/ipsec start
+	else
+		uci set ipsec.ipsec.enabled='0'
+		uci commit ipsec
+		[ $(ps -w |grep ipsec/starter|grep -v grep|wc -l) -ne 0 ] && /etc/init.d/ipsec stop
+	fi
+	if [ $(uci get sysmonitor.sysmonitor.pptp) == 1 ];  then
+		uci set luci-app-pptp-server.pptpd.enabled='1'
+		uci commit luci-app-pptp-server
+		 [ $(ps -w |grep pptpd|grep -v grep|wc -l) -eq 0 ] && /etc/init.d/luci-app-pptp-server start
+	else
+		uci set luci-app-ptp-server.pptpd.enabled='0'
+		uci commit luci-app-pptp-server
+		[ $(ps -w |grep pptpd|grep -v grep|wc -l) -ne 0 ] && /etc/init.d/luci-app-pptp-server stop
 	fi
 	if [ $(uci get sysmonitor.sysmonitor.vpn) == 0 ];  then
 		# Stop Passwall

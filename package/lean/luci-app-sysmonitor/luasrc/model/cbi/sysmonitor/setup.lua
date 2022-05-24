@@ -21,6 +21,16 @@ o=s:option(Flag,"vpn", translate("VPN Enable"))
 o.rmempty=false
 end
 
+if nixio.fs.access("/etc/init.d/ipsec") then
+o=s:option(Flag,"ipsec", translate("IPSEC Enable"))
+o.rmempty=false
+end
+
+if nixio.fs.access("/etc/init.d/luci-app-pptp-server") then
+o=s:option(Flag,"pptp", translate("PPTP Enable"))
+o.rmempty=false
+end
+
 if nixio.fs.access("/etc/init.d/smartdns") then
 o=s:option(Flag,"smartdnsAD", translate("SmartDNS-AD Enable"))
 o.rmempty=false
