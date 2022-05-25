@@ -14,6 +14,8 @@ function index()
 	entry({"admin", "sys", "sysmonitor", "wgusers"},cbi("sysmonitor/wgusers"),_("WGusers"), 50).leaf = true
 	entry({"admin", "sys", "sysmonitor", "log"},cbi("sysmonitor/log"),_("Log"), 60).leaf = true
 
+	entry({"admin", "sys", "sysmonitor", "ip_status"}, call("action_ip_status")).leaf = true
+	entry({"admin", "sys", "sysmonitor", "ip6_status"}, call("action_ip6_status")).leaf = true
 	entry({"admin", "sys", "sysmonitor", "gateway_status"}, call("action_gateway_status")).leaf = true
 	entry({"admin", "sys", "sysmonitor", "vpn_status"}, call("action_vpn_status")).leaf = true
 	entry({"admin", "sys", "sysmonitor", "wg_status"}, call("action_wg_status")).leaf = true
@@ -42,6 +44,20 @@ function get_users()
                         "[ -f '/var/log/ipsec_users' ] && cat /var/log/ipsec_users"))
 end
 
+
+function action_ip_status()
+	luci.http.prepare_content("application/json")
+	luci.http.write_json({
+		ip_state = luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip")
+	})
+end
+
+function action_ip6_status()
+	luci.http.prepare_content("application/json")
+	luci.http.write_json({
+		ip6_state = luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip6")
+	})
+end
 
 function action_gateway_status()
 	luci.http.prepare_content("application/json")

@@ -1,4 +1,11 @@
 <fieldset class="cbi-section">
+	<table width="100%" cellspacing="10" id="_xlnetacc_ip_status_table">
+		<tr><td width="20%" title="Local wan ip address ..." id="_ip_title"><font color=green></font></td><td title="GO TO Network ..." id="_ip_state"><em></em></td></tr>
+	</table>
+	<table width="100%" cellspacing="10" id="_xlnetacc_ip6_status_table">
+		<tr><td width="20%" title="Local wan ip6 address ..." id="_ip6_title"><font color=green></font></td><td title="GO TO Network ..." id="_ip6_state"><em></em></td></tr>
+	</table>
+
 	<table width="100%" cellspacing="10" id="_xlnetacc_gateway_status_table">
 		<tr><td width="20%" title="Refresh Network ..." id="_gateway_title"><font color=green></font></td><td title="GO TO Network ..." id="_gateway_state"><em></em></td></tr>
 	</table>
@@ -20,6 +27,8 @@
 </fieldset>
 
 <script type="text/javascript">//<![CDATA[
+	var ip_state = document.getElementById('_ip_state');
+	var ip6_state = document.getElementById('_ip6_state');
 	var gateway_state = document.getElementById('_gateway_state');
 	var vpn_state = document.getElementById('_vpn_state');
 	var wg_state = document.getElementById('_wg_state');
@@ -27,6 +36,8 @@
 	var ipsec_state = document.getElementById('_ipsec_state');
 	var pptp_state = document.getElementById('_pptp_state');
 
+	var ip_title = document.getElementById('_ip_title');
+	var ip6_title = document.getElementById('_ip6_title');
 	var gateway_title = document.getElementById('_gateway_title');
 	var vpn_title = document.getElementById('_vpn_title');
 	var wg_title = document.getElementById('_wg_title');
@@ -34,10 +45,22 @@
 	var ipsec_title = document.getElementById('_ipsec_title');
 	var pptp_title = document.getElementById('_pptp_title');
 
+	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "ip_status")%>', null, function(x, status) {
+		if ( x && x.status == 200 ) {
+			ip_title.innerHTML ='<em><b><font color=6699cc>wan ip address</font></b></em>';
+			ip_state.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/network/network"><font color=6699cc>'+status.ip_state+'</font></a></b></em>';
+		}
+	});
+	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "ip6_status")%>', null, function(x, status) {
+		if ( x && x.status == 200 ) {
+			ip6_title.innerHTML ='<em><b><font color=6699cc>wan ip6 address</font></b></em>';
+			ip6_state.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/network/network"><font color=6699cc>'+status.ip6_state+'</font></a></b></em>';
+		}
+	});
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "gateway_status")%>', null, function(x, status) {
 		if ( x && x.status == 200 ) {
-			gateway_title.innerHTML ='<em><b><a href="sysmonitor/refresh"><font color=green>Gateway Address</font></a></b></em>';
-			gateway_state.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/network/network"><font color=green>'+status.gateway_state+'</font></a></b></em>';
+			gateway_title.innerHTML ='<em><b><a href="sysmonitor/refresh"><font color=6699cc>Gateway Address</font></a></b></em>';
+			gateway_state.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/network/network"><font color=6699cc>'+status.gateway_state+'</font></a></b></em>';
 		}
 	});
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "vpn_status")%>', null, function(x, status) {
@@ -55,14 +78,8 @@
 	});
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "wg_status")%>', null, function(x, status) {
 		if ( x && x.status == 200 ) {
-			wg_title.innerHTML ='<em><b><a href="sysmonitor/refreshwg"><font color=green>Wireguard Address</font></a></b></em>';
-			wg_state.innerHTML ='<em><b><font color=green>'+status.wg_state+'</font></b></em>';
-		}
-	});
-	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "wg_status")%>', null, function(x, status) {
-		if ( x && x.status == 200 ) {
-			wg_title.innerHTML ='<em><b><a href="sysmonitor/refreshwg"><font color=green>Wireguard Address</font></a></b></em>';
-			wg_state.innerHTML ='<em><b><font color=green>'+status.wg_state+'</font></b></em>';
+			wg_title.innerHTML ='<em><b><a href="sysmonitor/refreshwg"><font color=6666cc>Wireguard Address</font></a></b></em>';
+			wg_state.innerHTML ='<em><b><font color=6666cc>'+status.wg_state+'</font></b></em>';
 		}
 	});
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "wireguard_status")%>', null, function(x, status) {
