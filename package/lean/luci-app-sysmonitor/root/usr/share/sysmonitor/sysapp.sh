@@ -50,7 +50,7 @@ ssr() {
 	fi
 	if [ ! "$ssrp" == '' ]; then
 		ssrpstatus='Stopped'
-		[ "$(ps -w |grep /etc/passwall |grep -v grep |wc -l)" -gt 0 ] && ssrpstatus='Running'
+		[ "$(ps -w |grep passwall |grep -v grep |wc -l)" -gt 0 ] && ssrpstatus='Running'
 	fi
 	if [ "$ssr" == '' -a "$ssrp" == '' ]; then
 		echo "No VPN Server installed."
@@ -177,7 +177,6 @@ switch_vpn() {
 	if [ $(uci get sysmonitor.sysmonitor.vpn) == 0 ];  then
 		onoff_vpn
 	else
-		ifup lan
 		if [ "$(ps -w|grep passwall|grep -v grep|wc -l)" == 0 ]; then
 			if [ -f "/etc/init.d/passwall" ]; then
 				uci set passwall.@global[0].enabled=1
@@ -321,8 +320,6 @@ uci commit network
 #/etc/init.d/network reload 2>/dev/null
 ifup wan
 ifup wan6
-ifup lan
-wifi up
 fi
 }
 
