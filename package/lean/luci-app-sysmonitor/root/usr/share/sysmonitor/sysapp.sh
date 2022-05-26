@@ -334,10 +334,17 @@ getip6() {
 	echo $(ip -o -6 addr list vlan.2 | cut -d ' ' -f7 | cut -d'/' -f1 |head -n1)
 }
 
+getlocal() {
+	echo $(getip)' '$(getip6)
+}
+
 arg1=$1
 shift
 case $arg1 in
 
+getlocal)
+	getlocal
+	;;
 getip)
 	getip
 	;;
