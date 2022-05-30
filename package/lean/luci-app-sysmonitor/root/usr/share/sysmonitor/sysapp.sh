@@ -126,7 +126,7 @@ do
 	s=$n
 done
 users=$(cat $file|grep peer|wc -l)
-[ "$users" == 0 ] && users='None'
+[ "$users" -le 1 ] && users='None'
 echo $users
 }
 
@@ -238,7 +238,7 @@ firmware () {
 	tmp=$(echo $firmware|cut -d'/' -f 9)
 	 [ -f $tmp ] && rm $tmp
 	echo "Download Firmware:"$tmp"..." > /var/log/sysmonitor.log
-	wget -c $firmware -O $tmp
+	wget  --no-check-certificate -c $firmware -O $tmp
 	echo "Download Firmware is OK.">> /var/log/sysmonitor.log
 	echo "Please go to Update">> /var/log/sysmonitor.log
 }
