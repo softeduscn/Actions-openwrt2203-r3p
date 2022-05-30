@@ -33,7 +33,7 @@ while [ "1" == "1" ]; do #死循环
 
 	homeip=$(uci_get_by_name $NAME sysmonitor homeip 0)
 	vpnip=$(uci_get_by_name $NAME sysmonitor vpnip 0)
-	dnsadd=$(uci_get_by_name network wan dns 0)
+	gateway=$(route |grep default|sed 's/default[[:space:]]*//'|sed 's/[[:space:]].*$//')
 	runssr=0
 	[ -f "/etc/init.d/shadowsocksr" ] && runssr=$(ps -w |grep ssr- |grep -v grep |wc -l)
 	if [ "$runssr" == 0 ];then
@@ -41,7 +41,7 @@ while [ "1" == "1" ]; do #死循环
 	fi
 	if [ "$runssr" -gt 0 ]; then
 		vpnok=0
-		if [ $dnsadd == $vpnip ]; then
+		if [ $gateway == $vpnip ]; then
 			uci set network.wan.gateway=$homeip
 			uci set network.wan.dns=$homeip
 			uci commit network
@@ -51,7 +51,7 @@ while [ "1" == "1" ]; do #死循环
 		status=$(ping_url $vpnip)
 		if [ "$status" == 0 ]; then
 			vpnok=0
-			if [ $dnsadd == $vpnip ]; then
+			if [ $gateway == $vpnip ]; then
 				uci set network.wan.gateway=$homeip
 				uci set network.wan.dns=$homeip
 				uci commit network
@@ -59,7 +59,7 @@ while [ "1" == "1" ]; do #死循环
 			fi
 		else
 			vpnok=1
-			if [ $dnsadd == $homeip ]; then
+			if [ $gateway == $homeip ]; then
 				uci set network.wan.gateway=$vpnip
 				uci set network.wan.dns=$vpnip
 				uci commit network
@@ -82,13 +82,13 @@ while [ "1" == "1" ]; do #死循环
 		if [ "$runssr" == 0 ]; then 
 			[ -f "/etc/init.d/passwall" ] && runssr=$(ps -w |grep passwall |grep -v grep |wc -l)
 		fi
-		dnsadd=$(uci_get_by_name network wan dns 0)
+		gateway=$(route |grep default|sed 's/default[[:space:]]*//'|sed 's/[[:space:]].*$//')
 		if [ "$runssr" == 0 ]; then
 			if [ "$vpnok" == 1 ]; then
-				[ $dnsadd == $homeip ] && num=50
+				[ $gateway == $homeip ] && num=50
 			fi
 		else
-			[ $dnsadd == $vpnip ] && num=50
+			[ $gateway == $vpnip ] && num=50
 		fi
 		if [ -f "/tmp/sysmonitor" ]; then
 			rm /tmp/sysmonitor

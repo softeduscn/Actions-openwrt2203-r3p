@@ -89,9 +89,9 @@ uci set firewall.@defaults[0].forward='ACCEPT'
 uci commit firewall
 
 sed -i '/192.168.1.8 NAS/d' /etc/hosts
-sed -i '/192.168.1.110 KMS/d' /etc/hosts
+#sed -i '/192.168.1.110 KMS/d' /etc/hosts
 echo '192.168.1.8 NAS' >> /etc/hosts
-echo '192.168.1.110 KMS' >> /etc/hosts
+#echo '192.168.1.110 KMS' >> /etc/hosts
 
 cat /etc/config/firewall | grep NetBIOS-138 > /dev/null
 if [ $? -ne 0 ];then
