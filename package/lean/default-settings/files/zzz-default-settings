@@ -132,20 +132,6 @@ config redirect
 	option src 'lan'
 	option dest_ip '192.168.1.8'
 
-config rule
-	option src 'wan'
-	option target 'ACCEPT'
-	option name 'Allow-OMV'
-	list src_ip '192.168.1.8'
-	list proto 'all'
-	option dest '*'
-
-config rule
-	option name 'OMV'
-	option src 'wan'
-	list src_ip '192.168.1.8'
-	option target 'ACCEPT'
-
 config zone
 	option name 'wghome'
 	option input 'ACCEPT'
