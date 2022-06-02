@@ -15,7 +15,6 @@ function index()
 	entry({"admin", "sys", "sysmonitor", "log"},cbi("sysmonitor/log"),_("Log"), 60).leaf = true
 
 	entry({"admin", "sys", "sysmonitor", "ip_status"}, call("action_ip_status")).leaf = true
-	entry({"admin", "sys", "sysmonitor", "gateway_status"}, call("action_gateway_status")).leaf = true
 	entry({"admin", "sys", "sysmonitor", "vpn_status"}, call("action_vpn_status")).leaf = true
 	entry({"admin", "sys", "sysmonitor", "wg_status"}, call("action_wg_status")).leaf = true
 	entry({"admin", "sys", "sysmonitor", "wireguard_status"}, call("action_wireguard_status")).leaf = true
@@ -47,15 +46,7 @@ end
 function action_ip_status()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({
-		ip_state = luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip").."<font color=9699cc>["..luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip6").."]</font>"
-	})
-end
-
-function action_gateway_status()
-	luci.http.prepare_content("application/json")
-	luci.http.write_json({
-		gateway_state = luci.sys.exec("uci get network.wan.gateway")
-	})
+		ip_state = luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip").."<font color=9699cc>["..luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip6").."]</font>".." gateway:"..luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getgateway")	})
 end
 
 function action_vpn_status()
