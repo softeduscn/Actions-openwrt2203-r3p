@@ -65,6 +65,7 @@ for i, f in ipairs(fs.glob("/tmp/upload/*")) do
 		inits[i].size = getSizeStr(attr.size)
 		inits[i].remove = 0
 		inits[i].install = false
+		inits[i].keeps = true
 	end
 end
 
@@ -132,7 +133,7 @@ btnis.write = function(self, section)
 		luci.sys.exec("echo 'Upgrade Firmware' >/var/log/sysmonitor.log")
 		luci.sys.exec("echo '------------------------------------------------------------------------------------------------------' >>/var/log/sysmonitor.log")
 		luci.http.redirect(luci.dispatcher.build_url("admin", "sys", "sysmonitor","log"))
-		tmp="cbid.table."..section..".install.keeps"
+		tmp="cbid.table."..section..".keeps"
 		local sysupgrade  = luci.http.formvalue(tmp)	
 		if sysupgrade then
 			sysupgrade='sysupgrade -c /tmp/upload/'..inits[section].name
@@ -142,8 +143,21 @@ btnis.write = function(self, section)
 		end
 		luci.sys.exec("echo "..sysupgrade.." >>/var/log/sysmonitor.log")
 		luci.sys.exec(sysupgrade)
-		
 	end
+end
+
+kp = tb:option(Flag, "keeps", translate("Keeps"))
+kp.template = "sysmonitor/other_keeps"
+kp.render = function(self, section, scope)
+	if not inits[section] then return false end
+	if Ispasswall(inits[section].name) or  Isshadowsocksr(inits[section].name)  then
+		scope.display = ""
+	elseif IsUpdateFile(inits[section].name) then
+		scope.display = ""
+	else
+		scope.display = "none"
+	end
+	Flag.render(self, section, scope)
 end
 
 return ful, form1, form
