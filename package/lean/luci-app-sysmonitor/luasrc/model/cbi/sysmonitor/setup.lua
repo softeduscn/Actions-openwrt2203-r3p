@@ -46,9 +46,6 @@ o = s:option(Value, "vpnip", translate("VPN IP Address"))
 o.datatype = "or(host)"
 o.rmempty = false
 
-o=s:option(Flag,"config", translate("Keep config"))
-o.rmempty=false
-
 o = s:option(Value, translate("firmware"), translate("Firmware Address"))
 --o.description = translate("Firmeware download Address)")
 o.default = "https://github.com/softeduscn/Actions-openwrt1907-r3p/releases/download/MI-R3P/openwrt-ramips-mt7621-xiaomi_mir3p-squashfs-sysupgrade.bin"

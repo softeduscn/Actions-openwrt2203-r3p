@@ -84,6 +84,7 @@ while [ "1" == "1" ]; do #死循环
 				uci set network.wan.dns=$homeip
 				uci commit network
 				ifup wan
+				/etc/init.d/odhcpd restart
 			fi
 		else
 			vpnok=1
@@ -92,6 +93,7 @@ while [ "1" == "1" ]; do #死循环
 				uci set network.wan.dns=$vpnip
 				uci commit network
 				ifup wan
+				/etc/init.d/odhcpd restart
 			fi
 		fi
 	fi

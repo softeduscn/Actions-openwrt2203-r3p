@@ -71,7 +71,7 @@ end
 form1 = SimpleForm("firmware", translate("Firmware"), nil)
 form1.reset = false
 form1.submit = false
-form1.description ='<table width="100%" cellspacing="10"><style>.button1 {-webkit-transition-duration: 0.4s;transition-duration: 0.4s;padding: 4px 16px;text-align: center;background-color: white;color: black;border: 2px solid #4CAF50;border-radius:5px;}.button1:hover {background-color: #4CAF50;color: white;}.button1 {font-size: 13px;}</style><tr><td width="25%" title="Firmware"><font color=green></font></td></tr><tr><td><b>'.. translate("Download & Upgrade") ..'</b></td><td><b><button class="button1"><a href="https://github.com/softeduscn/Actions-openwrt1907-r3p" target="_blank"> ' .. translate("View Firmware") .. ' </a></button></b></td><td><b><button class="button1"><a href="firmware">' .. translate("Download Firmware") .. '</a></button></b></td></tr></table>'
+form1.description ='<table width="100%" cellspacing="10"><style>.button1 {-webkit-transition-duration: 0.4s;transition-duration: 0.4s;padding: 4px 16px;text-align: center;background-color: white;color: black;border: 2px solid #4CAF50;border-radius:5px;}.button1:hover {background-color: #4CAF50;color: white;}.button1 {font-size: 13px;}</style><tr><td width="25%" title="Firmware"><font color=green></font></td></tr><tr><td><b>'.. translate("Download & Upgrade") ..'</b></td><td><b><button class="button1"><a href="https://github.com/softeduscn/Actions-openwrt2203-r3p" target="_blank"> ' .. translate("View Firmware") .. ' </a></button></b></td><td><b><button class="button1"><a href="firmware">' .. translate("Download Firmware") .. '</a></button></b></td></tr></table>'
 
 form = SimpleForm("filelist", translate("Upload file list"), nil)
 form.reset = false
@@ -132,7 +132,17 @@ btnis.write = function(self, section)
 		luci.sys.exec("echo 'Upgrade Firmware' >/var/log/sysmonitor.log")
 		luci.sys.exec("echo '------------------------------------------------------------------------------------------------------' >>/var/log/sysmonitor.log")
 		luci.http.redirect(luci.dispatcher.build_url("admin", "sys", "sysmonitor","log"))
-		luci.sys.exec("/usr/share/sysmonitor/sysapp.sh upgrade /tmp/upload/"..inits[section].name)
+		tmp="cbid.table."..section..".install.keeps"
+		local sysupgrade  = luci.http.formvalue(tmp)	
+		if sysupgrade then
+			sysupgrade='sysupgrade -c /tmp/upload/'..inits[section].name
+		else
+			sysupgrade='sysupgrade -n /tmp/upload/'..inits[section].name
+			
+		end
+		luci.sys.exec("echo "..sysupgrade.." >>/var/log/sysmonitor.log")
+		luci.sys.exec(sysupgrade)
+		
 	end
 end
 

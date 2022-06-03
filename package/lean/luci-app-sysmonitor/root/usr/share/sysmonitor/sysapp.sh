@@ -243,16 +243,6 @@ firmware () {
 	echo "Please go to Update">> /var/log/sysmonitor.log
 }
 
-upgrade() {
-	if [ $(uci get sysmonitor.sysmonitor.config)  == 1 ]; then
-		echo 'sysupgrade -c '$1 >> /var/log/sysmonitor.log
-		sysupgrade -c $1
-	else
-		echo 'sysupgrade -n '$1 >> /var/log/sysmonitor.log
-		sysupgrade -n $1
-	fi
-}
-
 vlan() {
 cat /etc/config/network | grep vlan > /dev/null
 if [ $? -ne 0 ];then
@@ -313,13 +303,12 @@ config device
 	option vid '2'
 EOF
 
-#uci set network.lan.device='vlan.1'
 uci set network.wan6.device='vlan.2'
 uci set network.wan.device='vlan.2'
 uci commit network
-#/etc/init.d/network reload 2>/dev/null
 ifup wan
 ifup wan6
+/etc/init.d/odhcpd restart
 fi
 }
 
@@ -377,9 +366,6 @@ ad_switch)
 	;;
 firmware)
 	firmware $1
-	;;
-upgrade)
-	upgrade $1
 	;;
 test)
 	echo $1
