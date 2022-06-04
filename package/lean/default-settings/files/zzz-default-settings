@@ -7,6 +7,9 @@
 #uci set zerotier.sample_config.enabled=0
 #uci commit zerotier
 
+uci set luci.main.lang='en'
+uci commit luci
+
 uci set fstab.@global[0].anon_mount='1'
 uci commit fstab
 
