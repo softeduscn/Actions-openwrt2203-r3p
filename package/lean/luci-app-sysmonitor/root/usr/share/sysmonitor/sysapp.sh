@@ -2,6 +2,14 @@
 
 NAME=sysmonitor
 APP_PATH=/usr/share/$NAME
+SYSLOG='/var/log/sysmonitor.log'
+
+echolog() {
+	local d="$(date "+%Y-%m-%d %H:%M:%S")"
+	echo -e "$d: $*" >>$SYSLOG
+	number=$(cat $SYSLOG|wc -l)
+	[ $number -gt 25 ] && sed -i '1,10d' $SYSLOG
+}
 
 uci_get_by_name() {
 	local ret=$(uci get $1.$2.$3 2>/dev/null)
@@ -237,10 +245,9 @@ firmware () {
 	[ "$1" != '' ] && firmware=$1
 	tmp=$(echo $firmware|cut -d'/' -f 9)
 	 [ -f $tmp ] && rm $tmp
-	echo "Download Firmware:"$tmp"..." > /var/log/sysmonitor.log
+	echolog "Download Firmware:"$tmp"..."
 	wget  --no-check-certificate -c $firmware -O $tmp
-	echo "Download Firmware is OK.">> /var/log/sysmonitor.log
-	echo "Please go to Update">> /var/log/sysmonitor.log
+	echolog "Download Firmware is OK.Please go to Update"
 }
 
 vlan() {
