@@ -223,7 +223,7 @@ start_dns() {
 		esac
 		case "$ssrplus_dns" in
 		1)
-			start_pdnsd $dnsserver $dnsport
+			ln_start_bin $(first_type dns2tcp) dns2tcp -L "127.0.0.1#$dns_port" -R "$dnsserver#$dnsport"
 			pdnsd_enable_flag=1
 			;;
 		2)
@@ -247,7 +247,7 @@ start_dns() {
 		uci set smartdns.@smartdns[0].seconddns_server_group="oversea"
 		uci commit smartdns
 		/etc/init.d/smartdns reload
-			ln_start_bin $(first_type dns2tcp) dns2tcp -L "127.0.0.1#$dns_port" -R "$dnsserver#$dnsport"
+			start_pdnsd $dnsserver $dnsport
 			pdnsd_enable_flag=3
 			;;
 		esac
