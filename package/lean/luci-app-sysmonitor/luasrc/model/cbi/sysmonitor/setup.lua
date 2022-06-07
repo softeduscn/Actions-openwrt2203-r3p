@@ -2,13 +2,14 @@
 local m, s
 local global = 'sysmonitor'
 local uci = luci.model.uci.cursor()
-
+ip = luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip")
 m = Map("sysmonitor",translate("System Monitor"))
 
 m:append(Template("sysmonitor/status"))
 
 s = m:section(TypedSection, "sysmonitor", translate("System Settings"))
 s.anonymous = true
+s.description ='<style>.button1 {-webkit-transition-duration: 0.4s;transition-duration: 0.4s;padding: 4px 16px;text-align: center;background-color: white;color: black;border: 2px solid #4CAF50;border-radius:5px;}.button1:hover {background-color: #4CAF50;color: white;}.button1 {font-size: 13px;}</style><button class="button1"><a href="http://'..ip..':7681" target="_blank" title="Open a ttyd terminal">' .. translate("OpenTerminal") .. '</a></button>'
 
 o=s:option(Flag,"enable", translate("Enable"))
 o.rmempty=false

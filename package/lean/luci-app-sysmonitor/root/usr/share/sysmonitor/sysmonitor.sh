@@ -103,7 +103,7 @@ while [ "1" == "1" ]; do #死循环
 	[ $(uci_get_by_name $NAME sysmonitor enable 0) == 0 ] && exit 0
 
 	num=0
-	while [ $num -le 30 ]; do
+	while [ $num -le 10 ]; do
 		sleep $sleep_unit
 		[ $(uci_get_by_name $NAME sysmonitor enable 0) == 0 ] && exit 0
 		let num=num+sleep_unit
