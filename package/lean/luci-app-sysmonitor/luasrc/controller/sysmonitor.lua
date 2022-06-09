@@ -44,9 +44,11 @@ end
 
 
 function action_ip_status()
+	ip = luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip")
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({
-		ip_state = luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip").."<font color=9699cc>["..luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip6").."]</font>".." gateway:"..luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getgateway")	})
+		ip_state = ip.."<font color=9699cc>["..luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getip6").."]</font>".." gateway:"..luci.sys.exec("/usr/share/sysmonitor/sysapp.sh getgateway")..'</font><button class=button1><a href="http://'..ip..':7681" target="_blank" title=" Open terminal">Open terminal</a></button>'
+	})
 end
 
 function action_vpn_status()
@@ -66,7 +68,7 @@ end
 function action_wg_status()
 	luci.http.prepare_content("application/json")
 	luci.http.write_json({
-		wg_state = luci.sys.exec("curl http://47.100.183.141/getwg.php")
+		wg_state = luci.sys.exec("curl http://47.100.183.141/getwg.php")..'<button class="button1"><a href="sysmonitor/refreshwg" title="Update wireguard">Update</a></button>'
 	})
 end
 

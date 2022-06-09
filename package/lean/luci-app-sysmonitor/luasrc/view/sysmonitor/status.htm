@@ -1,9 +1,10 @@
+<style>.button1 {-webkit-transition-duration: 0.4s;transition-duration: 0.4s;padding: 1px 2px;text-align: center;background-color: white;color: black;border: 2px solid #4CAF50;border-radius:1px;}.button1:hover {background-color: #4CAF50;color: white;}.button1 {font-size: 13px;}</style>
 <fieldset class="cbi-section">
 	<table width="100%" cellspacing="10" id="_xlnetacc_ip_status_table">
-		<tr><td width="20%" title="Refresh wan ..." id="_ip_title"><font color=green></font></td><td title="GO TO Network ..." id="_ip_state"><em></em></td></tr>
+		<tr><td width="20%" title="Update Wan ipaddress..." id="_ip_title"><font color=green></font></td><td title="" id="_ip_state"><em></em></td></tr>
 	</table>
 	<table width="100%" cellspacing="10" id="_xlnetacc_wg_status_table">
-		<tr><td width="20%" title="Refresh Wireguard ..." id="_wg_title"></td><td id="_wg_state"><em></em></td></tr>
+		<tr><td width="20%" title="Update Wireguard ip address..." id="_wg_title"></td><td id="_wg_state"><em></em></td></tr>
 	</table>
 	<table width="100%" cellspacing="10" id="_xlnetacc_vpn_status_table">
 		<tr><td width="20%" title="Start/Stop VPN" id="_vpn_title"></td><td title="Switch VPN ..." id="_vpn_state"><em></em></td></tr>
@@ -36,8 +37,8 @@
 
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "ip_status")%>', null, function(x, status) {
 		if ( x && x.status == 200 ) {
-			ip_title.innerHTML ='<em><b><a href="sysmonitor/refresh"><font color=6699cc>wan ip address</font></a></b></em>';
-			ip_state.innerHTML ='<em><b><a href="/cgi-bin/luci/admin/network/network"><font color=6699cc>'+status.ip_state+'</font></a></b></em>';
+			ip_title.innerHTML ='<em><b><font color=6699cc>wan ip</font></b></em>';
+			ip_state.innerHTML ='<em><b><font color=6699cc><a href="sysmonitor/refresh">'+status.ip_state+'</a></font></b></em>';
 		}
 	});
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "vpn_status")%>', null, function(x, status) {
@@ -55,7 +56,7 @@
 	});
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "wg_status")%>', null, function(x, status) {
 		if ( x && x.status == 200 ) {
-			wg_title.innerHTML ='<em><b><a href="sysmonitor/refreshwg"><font color=6666cc>Wireguard Address</font></a></b></em>';
+			wg_title.innerHTML ='<em><b><font color=6666cc>wireguard</font></b></em>';
 			wg_state.innerHTML ='<em><b><font color=6666cc>'+status.wg_state+'</font></b></em>';
 		}
 	});
