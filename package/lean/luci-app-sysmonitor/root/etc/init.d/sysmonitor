@@ -84,9 +84,7 @@ start()
 				/etc/init.d/passwall restart &
 			fi			
 		elif [ -f "/etc/init.d/shadowsocksr" ]; then
-			if [ $(uci get passwall.@global[0].enabled) == 0 ]; then
-				/etc/init.d/shadowsocksr restart &
-			fi
+			/etc/init.d/shadowsocksr restart &
 		else
 			uci set sysmonitor.sysmonitor.vpn=0
 			uci commit sysmonitor

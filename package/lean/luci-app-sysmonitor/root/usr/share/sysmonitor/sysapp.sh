@@ -189,13 +189,15 @@ switch_vpn() {
 			if [ -f "/etc/init.d/passwall" ]; then
 				uci set passwall.@global[0].enabled=1
 				uci commit passwall
-				[ -f "/etc/init.d/shadowsocksr" ] && /etc/init.d/shadowsocksr stop
-				/etc/init.d/passwall restart
+				/etc/init.d/passwall restart &
+				echo "Passwall"
+			else
+				[ -f "/etc/init.d/shadowsocksr" ] && /etc/init.d/shadowsocksr restart &
+				echo "Shadowsocksr"
 			fi
-			echo "Passwall"
+			
 		elif [ "$(ps -w|grep ssrplus|grep -v grep|wc -l)" == 0 ]; then
-			[ -f "/etc/init.d/passwall" ] && /etc/init.d/passwall stop
-			[ -f "/etc/init.d/shadowsocksr" ] && /etc/init.d/shadowsocksr restart
+			[ -f "/etc/init.d/shadowsocksr" ] && /etc/init.d/shadowsocksr restart &
 			echo "Shadowsocksr"
 		fi
 	fi
@@ -210,10 +212,10 @@ onoff_vpn() {
 		if [ "$(ps |grep /etc/passwall |grep -v grep |wc -l)" -gt 0 ]; then
 			uci set passwall.@global[0].enabled=0
 			uci commit passwall
-			/etc/init.d/passwall stop
+			/etc/init.d/passwall stop &
 		fi
 		# Stop Shadowsocksr
-		[ "$(ps |grep ssrplus |grep -v grep |wc -l)" -gt 0 ] && /etc/init.d/shadowsocksr stop
+		[ "$(ps |grep ssrplus |grep -v grep |wc -l)" -gt 0 ] && /etc/init.d/shadowsocksr stop &
 		uci set sysmonitor.sysmonitor.vpn=0
 	else
 		if [ -f "/etc/init.d/passwall" ]; then
