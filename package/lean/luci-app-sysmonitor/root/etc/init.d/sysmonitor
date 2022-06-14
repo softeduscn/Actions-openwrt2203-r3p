@@ -100,6 +100,8 @@ start()
 		fi
 		/etc/init.d/smartdns restart &
 	fi
+	$APP_PATH/sysapp.sh getip
+	$APP_PATH/sysapp.sh getip6
 	set sysmonitor.sysmonitor.enable=1
 	set commit sysmonitor
 	$APP_PATH/sysmonitor.sh &

@@ -57,8 +57,13 @@ check_ip() {
 	fi
 }
 
+ipold='888'
 while [ "1" == "1" ]; do #死循环
-
+	ipv6=$(ip -o -6 addr list vlan.2 | cut -d ' ' -f7 | cut -d'/' -f1 |head -n1)
+	[ ! "$ipold == $ipv6" ] && {
+		ipold=$ipv6
+		/usr/share/sysmonitor/sysapp.sh getip6
+	}
 	homeip=$(uci_get_by_name $NAME sysmonitor homeip 0)
 	vpnip=$(uci_get_by_name $NAME sysmonitor vpnip 0)
 	gateway=$(check_ip $(route |grep default|sed 's/default[[:space:]]*//'|sed 's/[[:space:]].*$//'))
@@ -70,6 +75,8 @@ while [ "1" == "1" ]; do #死循环
 	if [ "$runssr" -gt 0 ]; then
 		vpnok=0
 		if [ $gateway == $vpnip ]; then
+			d=$(date "+%Y-%m-%d %H:%M:%S")
+			echo $d": gateway="$homeip >> /var/log/sysmonitor.log
 			uci set network.wan.gateway=$homeip
 			uci set network.wan.dns=$homeip
 			uci commit network
@@ -80,6 +87,8 @@ while [ "1" == "1" ]; do #死循环
 		if [ "$status" == 0 ]; then
 			vpnok=0
 			if [ $gateway == $vpnip ]; then
+				d=$(date "+%Y-%m-%d %H:%M:%S")
+				echo $d": gateway="$homeip >> /var/log/sysmonitor.log
 				uci set network.wan.gateway=$homeip
 				uci set network.wan.dns=$homeip
 				uci commit network
@@ -89,6 +98,8 @@ while [ "1" == "1" ]; do #死循环
 		else
 			vpnok=1
 			if [ $gateway == $homeip ]; then
+				d=$(date "+%Y-%m-%d %H:%M:%S")
+				echo $d": gateway="$vpnip >> /var/log/sysmonitor.log
 				uci set network.wan.gateway=$vpnip
 				uci set network.wan.dns=$vpnip
 				uci commit network
@@ -97,9 +108,6 @@ while [ "1" == "1" ]; do #死循环
 			fi
 		fi
 	fi
-
-	/usr/share/sysmonitor/sysapp.sh getip >/www/ip.html
-	/usr/share/sysmonitor/sysapp.sh getip6 >/www/ip6.html
 	[ $(uci_get_by_name $NAME sysmonitor enable 0) == 0 ] && exit 0
 
 	num=0

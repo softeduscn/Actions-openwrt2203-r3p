@@ -187,7 +187,6 @@ config wireguard_wghome
 EOF
 fi
 
-
 sed -i '/dhcp-option/d' /etc/dnsmasq.conf
 echo "#dhcp-option-force=125,00:00:00:00:16:02:06:48:47:57:2d:43:54:03:04:5a:58:48:4e:0b:02:00:55:0a:02:20:00" >> /etc/dnsmasq.conf
 echo "#dhcp-option=15" >> /etc/dnsmasq.conf
