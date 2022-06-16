@@ -60,7 +60,9 @@ check_ip() {
 ipold='888'
 while [ "1" == "1" ]; do #死循环
 	ipv6=$(ip -o -6 addr list vlan.2 | cut -d ' ' -f7 | cut -d'/' -f1 |head -n1)
-	[ ! "$ipold == $ipv6" ] && {
+	[ ! $ipold == $ipv6 ] && {
+		d=$(date "+%Y-%m-%d %H:%M:%S")
+		echo $d": ip6="$ipv6 >> /var/log/sysmonitor.log
 		ipold=$ipv6
 		/usr/share/sysmonitor/sysapp.sh getip6
 	}
