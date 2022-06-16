@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 NAME=sysmonitor
 APP_PATH=/usr/share/$NAME
