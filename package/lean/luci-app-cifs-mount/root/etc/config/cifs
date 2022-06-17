@@ -1,0 +1,27 @@
+
+config cifs
+	option enabled '1'
+	option workgroup 'WORKGROUP'
+	option iocharset 'utf8'
+	option delay '5'
+	option mountarea '/mnt'
+
+config natshare
+	option agm 'ro'
+	option iocharset 'utf8'
+	option users 'guest'
+	option server '192.168.1.8'
+	option smbver '1.0'
+	option name 'music'
+	option natpath '/mnt/music'
+
+config natshare
+	option agm 'rw'
+	option iocharset 'utf8'
+	option users 'guest'
+	option server '192.168.1.8'
+	option name 'app'
+	option natpath '/mnt/app'
+	option smbver '1.0'
+
+
