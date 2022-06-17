@@ -1,4 +1,3 @@
-
 config cifs
 	option enabled '1'
 	option workgroup 'WORKGROUP'
@@ -7,13 +6,13 @@ config cifs
 	option mountarea '/mnt'
 
 config natshare
-	option agm 'ro'
 	option iocharset 'utf8'
 	option users 'guest'
 	option server '192.168.1.8'
-	option smbver '1.0'
 	option name 'music'
 	option natpath '/mnt/music'
+	option smbver '2.0'
+	option agm 'rw'
 
 config natshare
 	option agm 'rw'
@@ -22,6 +21,7 @@ config natshare
 	option server '192.168.1.8'
 	option name 'app'
 	option natpath '/mnt/app'
-	option smbver '1.0'
+	option smbver '2.0'
+
 
 

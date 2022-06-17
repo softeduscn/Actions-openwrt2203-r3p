@@ -16,7 +16,7 @@ uci commit fstab
 uci set upnpd.config.enabled='1'
 uci commit upnpd
 
-uci set system.@system[0].hostname='VAIOMI'
+uci set system.@system[0].hostname='VAIO'
 uci set system.@system[0].timezone=CST-8
 uci set system.@system[0].zonename=Asia/Shanghai
 uci commit system
@@ -92,8 +92,10 @@ uci set firewall.@defaults[0].forward='ACCEPT'
 uci commit firewall
 
 sed -i '/192.168.1.8 NAS/d' /etc/hosts
+sed -i '/192.168.88.1 VAIO/d' /etc/hosts
 #sed -i '/192.168.1.110 KMS/d' /etc/hosts
 echo '192.168.1.8 NAS' >> /etc/hosts
+echo '192.168.88.1 VAIO' >> /etc/hosts
 #echo '192.168.1.110 KMS' >> /etc/hosts
 
 cat /etc/config/firewall | grep NetBIOS-138 > /dev/null
@@ -164,6 +166,7 @@ config sambashare
 	option guest_ok 'yes'
 	option create_mask '0777'
 	option dir_mask '0777'
+	option force_root '1'
 
 config sambashare
 	option name 'app'
@@ -172,6 +175,7 @@ config sambashare
 	option create_mask '0777'
 	option dir_mask '0777'
 	option path '/mnt/app'
+	option force_root '1'
 EOF
 
 file='/etc/samba/smb.conf.template'
@@ -186,6 +190,8 @@ cat >> $file << EOF
 	wins proxy =  yes
 	remote announce
 	remote browse sync
+	max protocol = SMB3
+	min protocol = NT1
 EOF
 
 sed -i '/media_dir/d' /etc/config/minidlna
