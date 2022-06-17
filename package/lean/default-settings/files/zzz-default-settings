@@ -94,7 +94,7 @@ uci commit firewall
 sed -i '/192.168.1.8 NAS/d' /etc/hosts
 echo '192.168.1.8 NAS' >> /etc/hosts
 
-cat /etc/config/firewall | grep NetBIOS-138 > /dev/null
+cat /etc/config/firewall | grep wghome > /dev/null
 if [ $? -ne 0 ];then
 cat >> /etc/config/firewall <<EOF
 config zone
@@ -192,6 +192,7 @@ EOF
 
 sed -i '/media_dir/d' /etc/config/minidlna
 uci set minidlna.config.enabled='1'
+uci set minidlna.config.friendly_name='VAIO DLNA Server'
 uci add_list minidlna.config.media_dir="/mnt/music"
 uci commit minidlna
 
