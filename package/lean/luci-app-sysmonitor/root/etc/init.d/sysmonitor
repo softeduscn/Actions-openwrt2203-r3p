@@ -28,8 +28,6 @@ start()
 		uci commit dhcp
 		/etc/init.d/dnsmasq reload >/dev/null
 	fi
-	killall ttyd
-	/usr/bin/ttyd /bin/login &
 	if [ $(uci get sysmonitor.sysmonitor.bbr) == 1 ];  then
 		sysctl -w net.ipv4.tcp_congestion_control=bbr
 	else

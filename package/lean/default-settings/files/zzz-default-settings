@@ -149,6 +149,7 @@ config wireguard_wghome
 EOF
 fi
 
+[ -f /init.d/samba4 ] && {
 cat >> /etc/config/samba4 <<EOF
 config samba
 	option workgroup 'WORKGROUP'
@@ -189,12 +190,24 @@ cat >> $file << EOF
 	max protocol = SMB3
 	min protocol = NT1
 EOF
+}
 
+[ -f /etc/init.d/minidlna ] && {
 sed -i '/media_dir/d' /etc/config/minidlna
 uci set minidlna.config.enabled='1'
 uci set minidlna.config.friendly_name='VAIO DLNA Server'
 uci add_list minidlna.config.media_dir="/mnt/music"
 uci commit minidlna
+}
+
+[ -f /etc/init.d/ttyd ] && {
+cat > /etc/config/ttyd <<EOF
+config ttyd
+	option command '/bin/login'
+	option debug '7'
+	option ipv6 '1'
+EOF
+}
 
 sed -i '/dhcp-option/d' /etc/dnsmasq.conf
 echo "#dhcp-option-force=125,00:00:00:00:16:02:06:48:47:57:2d:43:54:03:04:5a:58:48:4e:0b:02:00:55:0a:02:20:00" >> /etc/dnsmasq.conf
