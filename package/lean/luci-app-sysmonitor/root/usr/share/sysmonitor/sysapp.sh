@@ -336,10 +336,44 @@ getgateway() {
 	echo $(route |grep default|sed 's/default[[:space:]]*//'|sed 's/[[:space:]].*$//')
 }
 
+minidlna() {
+	[ ! -d /var/minidlna ] && mkdir /var/minidlna
+	path="/var/minidlna"
+	/etc/init.d/minidlna stop 2>/dev/null
+	sed -i '/media_dir/d' /etc/config/minidlna
+	dir=$(ls -d $path/* 2>/dev/null) 
+	for n in $dir
+	do
+		umount $n 2>/dev/null
+		rmdir $n
+	done
+	str=$(uci_get_by_name $NAME sysmonitor minidlna 0)','
+	str=$(echo $str|sed 's/,,/,/g')
+	num=$(echo $str|awk -F"," '{print NF-1}')
+	a=1
+	while [ $a -le $num ]
+	do
+ 	  	dir=$(echo $str|cut -d',' -f $a)
+		status=$(mount|grep cifs|grep '/'$dir)
+		[  -n "$status" ] && {
+			
+			mkdir $path/$dir
+			mount --bind /mnt/$dir $path/$dir
+			uci add_list minidlna.config.media_dir="$path/$dir"
+		}
+   		a=`expr $a + 1`
+	done
+	uci commit minidlna
+	/etc/init.d/minidlna start 2>/dev/null
+}
+
 arg1=$1
 shift
 case $arg1 in
 
+minidlna)
+	minidlna
+	;;
 getip)
 	getip
 	;;

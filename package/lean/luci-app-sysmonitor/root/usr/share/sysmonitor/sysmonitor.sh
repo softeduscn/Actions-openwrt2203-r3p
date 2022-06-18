@@ -56,7 +56,7 @@ check_ip() {
 		fi
 	fi
 }
-
+$APP_PATH/sysapp.sh minidlna &
 ipold='888'
 while [ "1" == "1" ]; do #死循环
 	ipv6=$(ip -o -6 addr list vlan.2 | cut -d ' ' -f7 | cut -d'/' -f1 |head -n1)

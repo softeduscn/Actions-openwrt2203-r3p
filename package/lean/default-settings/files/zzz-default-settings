@@ -150,11 +150,11 @@ EOF
 fi
 
 [ -f /init.d/samba4 ] && {
-cat >> /etc/config/samba4 <<EOF
+cat > /etc/config/samba4 <<EOF
 config samba
 	option workgroup 'WORKGROUP'
 	option charset 'UTF-8'
-	option description 'Samba on OpenWRT'
+	option description 'Samba on VAIO'
 
 config sambashare
 	option name 'music'
@@ -187,7 +187,7 @@ cat >> $file << EOF
 	wins proxy =  yes
 	remote announce
 	remote browse sync
-	max protocol = SMB3
+	max protocol = SMB2
 	min protocol = NT1
 EOF
 }
