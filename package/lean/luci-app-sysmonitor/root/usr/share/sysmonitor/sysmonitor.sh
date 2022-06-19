@@ -65,6 +65,7 @@ while [ "1" == "1" ]; do #死循环
 		echo $d": ip6="$ipv6 >> /var/log/sysmonitor.log
 		ipold=$ipv6
 		/usr/share/sysmonitor/sysapp.sh getip6
+		/etc/init.d/samba4 restart
 	}
 	homeip=$(uci_get_by_name $NAME sysmonitor homeip 0)
 	vpnip=$(uci_get_by_name $NAME sysmonitor vpnip 0)
