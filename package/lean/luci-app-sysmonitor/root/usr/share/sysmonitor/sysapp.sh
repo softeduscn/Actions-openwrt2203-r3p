@@ -367,10 +367,21 @@ minidlna() {
 	/etc/init.d/minidlna start 2>/dev/null
 }
 
+minidlna_status() {
+status=$(/usr/bin/wget -qO- 'http://127.0.0.1:8200')
+status=$(echo ${status#*<tr><td>})
+status=$(echo ${status%<h3>*})
+status=$(echo $status|sed 's/<\/td><td>/(/g'|sed 's/<\/td><\/tr><tr>/)/g'|sed 's/<\/td><\/tr><\/table>/)/g'|sed 's/ /-/g'|sed 's/<td>/ /g')
+echo $status
+}
+
 arg1=$1
 shift
 case $arg1 in
 
+minidlna_status)
+	minidlna_status
+	;;
 minidlna)
 	minidlna
 	;;
