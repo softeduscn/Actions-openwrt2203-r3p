@@ -17,7 +17,6 @@ stop()
 }
 start()
 {
-	echo "[ \$INTERFACE = wan ] && touch /tmp/sysmonitor" >/etc/hotplug.d/iface/90-sysmonitor
 	/usr/share/sysmonitor/sysapp.sh vlan
 	if [ $(uci get dhcp.lan.dhcpv6) == 'server' ];  then
 		uci set dhcp.lan.force='1'
