@@ -58,7 +58,18 @@ check_ip() {
 }
 $APP_PATH/sysapp.sh minidlna &
 ipold='888'
+dnsname="music111.ddnsfree.com"
+music111="888"
 while [ "1" == "1" ]; do #死循环
+	status=$(/usr/bin/wget -qO- 'http://nas:8080/ip6.html')
+	[ -n "$status" ] && {
+	[ ! $status == $music111 ] && {
+		music111=$status
+		sed -i "/$dnsname/d" /etc/hosts
+		echo $status' '$dnsname >> /etc/hosts
+		/etc/init.d/dnsmasq restart &
+	}
+	}
 	ipv6=$(ip -o -6 addr list vlan.2 | cut -d ' ' -f7 | cut -d'/' -f1 |head -n1)
 	[ ! $ipold == $ipv6 ] && {
 		d=$(date "+%Y-%m-%d %H:%M:%S")
