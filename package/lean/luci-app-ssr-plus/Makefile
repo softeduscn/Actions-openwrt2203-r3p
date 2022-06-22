@@ -59,7 +59,7 @@ select PACKAGE_luci-lib-ipkg if PACKAGE_$(PKG_NAME)
 choice
 	prompt "V2ray-core Selection"
 	default PACKAGE_$(PKG_NAME)_INCLUDE_Xray if aarch64||arm||i386||x86_64
-	default PACKAGE_$(PKG_NAME)_INCLUDE_NONE_V2RAY
+	default PACKAGE_$(PKG_NAME)_INCLUDE_V2ray
 
 	config PACKAGE_$(PKG_NAME)_INCLUDE_NONE_V2RAY
 	bool "None"
