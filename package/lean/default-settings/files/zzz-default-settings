@@ -220,8 +220,8 @@ sed -i '/option disabled/d' /etc/config/wireless
 sed -i '/set wireless.radio${devidx}.disabled/d' /lib/wifi/mac80211.sh
 wifi up
 
-/etc/init.d/ipsec disable
-/etc/init.d/pptpd disable
-/etc/init.d/luci-app-pptp-server disable
+#/etc/init.d/ipsec disable
+#/etc/init.d/pptpd disable
+#/etc/init.d/luci-app-pptp-server disable
 
 exit 0
