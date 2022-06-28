@@ -3,9 +3,10 @@
 	<table width="100%" cellspacing="10" id="_xlnetacc_ip_status_table">
 		<tr><td width="20%" title="Update Wan ipaddress..." id="_ip_title"><font color=green></font></td><td title="" id="_ip_state"><em></em></td></tr>
 	</table>
-	<table width="100%" cellspacing="10" id="_xlnetacc_minidlna_status_table">
-		<tr><td width="20%" title="Minidlna Status..." id="_minidlna_title"><font color=green></font></td><td title="" id="_minidlna_state"><em></em></td></tr>
+<!-- 	<table width="100%" cellspacing="10" id="_xlnetacc_minidlna_status_table">
+ 		<tr><td width="20%" title="Minidlna Status..." id="_minidlna_title"><font color=green></font></td><td title="" id="_minidlna_state"><em></em></td></tr>
 	</table>	
+-->
 	<table width="100%" cellspacing="10" id="_xlnetacc_wg_status_table">
 		<tr><td width="20%" title="Update Wireguard ip address..." id="_wg_title"></td><td id="_wg_state"><em></em></td></tr>
 	</table>
@@ -52,6 +53,7 @@
 			minidlna_state.innerHTML ='<em><b><font color=6699cc>'+status.minidlna_state+'</font></b></em>';
 		}
 	});
+
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "vpn_status")%>', null, function(x, status) {
 		if ( x && x.status == 200 ) {
 			if ( status.vpn_state.search(/Running/) > 0 ) {
@@ -65,12 +67,13 @@
 			vpn_state.innerHTML ='<em><b></b></em>';}
 		}
 	});
-	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "wg_status")%>', null, function(x, status) {
+/*	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "wg_status")%>', null, function(x, status) {
 		if ( x && x.status == 200 ) {
 			wg_title.innerHTML ='<em><b><font color=6666cc>wireguard</font></b></em>';
 			wg_state.innerHTML ='<em><b><font color=6666cc>'+status.wg_state+'</font></b></em>';
 		}
 	});
+*/
 	XHR.poll(5, '<%=luci.dispatcher.build_url("admin", "sys", "sysmonitor", "wireguard_status")%>', null, function(x, status) {
 		if ( x && x.status == 200 ) {
 			if ( status.wireguard_state.search(/one/) > 0 ) { 
@@ -102,4 +105,5 @@
 		}
 	});
 //]]></script>
+
 
