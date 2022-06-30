@@ -100,6 +100,42 @@ config zone
 config forwarding
 	option dest 'lan'
 	option src 'wghome'
+
+config redirect
+	option dest_port '137'
+	option name 'NetBIOS-137'
+	option src_dport '137'
+	option target 'DNAT'
+	option dest 'wan'
+	option src 'lan'
+	option dest_ip '192.168.1.8'
+
+config redirect
+	option dest_port '138'
+	option src 'lan'
+	option name 'NetBIOS-138'
+	option src_dport '138'
+	option target 'DNAT'
+	option dest_ip '192.168.1.8'
+	option dest 'wan'
+
+config redirect
+	option dest_port '139'
+	option name 'NetBIOS-139'
+	option src_dport '139'
+	option target 'DNAT'
+	option dest 'wan'
+	option src 'lan'
+	option dest_ip '192.168.1.8'
+
+config redirect
+	option dest_port '445'
+	option name 'NetBIOS-445'
+	option src_dport '445'
+	option target 'DNAT'
+	option dest 'wan'
+	option src 'lan'
+	option dest_ip '192.168.1.8'
 EOF
 fi
 

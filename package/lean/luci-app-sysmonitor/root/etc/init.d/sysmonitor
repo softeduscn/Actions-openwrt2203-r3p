@@ -38,6 +38,7 @@ start()
 	else
 		sysctl -w net.ipv4.tcp_congestion_control=cubic
 	fi
+	[ -f /etc/init.d/ipsec ] && {
 	if [ $(uci get sysmonitor.sysmonitor.ipsec) == 1 ];  then
 		uci set ipsec.ipsec.enabled='1'
 		uci commit ipsec
@@ -47,6 +48,8 @@ start()
 		uci commit ipsec
 		[ $(ps -w |grep ipsec/starter|grep -v grep|wc -l) -ne 0 ] && /etc/init.d/ipsec stop
 	fi
+	}
+	[ -f /etc/init.d/luci-app-pptp-server ] && {
 	if [ $(uci get sysmonitor.sysmonitor.pptp) == 1 ];  then
 		uci set luci-app-pptp-server.pptpd.enabled='1'
 		uci commit luci-app-pptp-server
@@ -56,6 +59,7 @@ start()
 		uci commit luci-app-pptp-server
 		[ $(ps -w |grep pptpd|grep -v grep|wc -l) -ne 0 ] && /etc/init.d/luci-app-pptp-server stop
 	fi
+	}
 	if [ $(uci get sysmonitor.sysmonitor.vpn) == 0 ];  then
 		# Stop Passwall
 		if [ -f "/etc/init.d/passwall" ]; then
@@ -99,4 +103,5 @@ start()
 	set commit sysmonitor
 	$APP_PATH/sysmonitor.sh &
 }
+
 
